@@ -19,6 +19,8 @@ enum Music {
   Clasic,
 }
 
+// THIS IS AN ADDED COMMENT
+
 class Party {
   @required
   final DateTime timeOfTheParty;
