@@ -1,6 +1,3 @@
-import 'dart:html';
-import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
 
 import './lat_long.dart';
@@ -85,7 +82,7 @@ class Party {
   }
 
   static Map<String, dynamic> toMap(Party party) {
-    party == null
+    return party == null
         ? null
         : {
             'timeOfTheParty': party.timeOfTheParty,

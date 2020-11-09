@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 class User {
   final String username;
   final String imageUrl;

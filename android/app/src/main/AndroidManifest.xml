@@ -1,7 +1,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.IvanŠtajcer.LetsParty">
+    package="com.example.LetsParty">
+
+<uses-permission android:name="android.permission.INTERNET"/>
+
    <application
-        android:label="LetsParty"
+        android:label="io.flutter.app.FlutterApplication"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
