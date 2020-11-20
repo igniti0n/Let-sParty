@@ -5,7 +5,15 @@ import 'package:firebase_storage/firebase_storage.dart';
 class FirebaseStorageService {
   final FirebaseStorage instance = FirebaseStorage.instance;
 
-  Future<String> storeFile({
+  Future<String> storeUserImage(File image, String uid) async {
+    try {
+      return _storeFile(file: image, path: 'userImages/$uid/avatar.png');
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  Future<String> _storeFile({
     File file,
     String path,
     StorageMetadata storageMetadata,

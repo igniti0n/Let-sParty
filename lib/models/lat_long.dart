@@ -6,16 +6,15 @@ class LatLng {
 
   factory LatLng.fromMap(Map<String, dynamic> coordinates) {
     return new LatLng(
-      latitude: coordinates['latitude'],
-      longitude: coordinates['longitude'],
+      latitude: (coordinates['latitude'] as num).toDouble(),
+      longitude: (coordinates['longitude'] as num).toDouble(),
     );
   }
 
-  static Map<String, dynamic> toMap(LatLng coordinates){
-      return {
-        'latitude' : coordinates.latitude,
-        'longitude' : coordinates.longitude,
-      };
+  static Map<String, dynamic> toMap(LatLng coordinates) {
+    return {
+      'latitude': coordinates.latitude,
+      'longitude': coordinates.longitude,
+    };
   }
-
 }

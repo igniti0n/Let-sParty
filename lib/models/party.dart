@@ -63,10 +63,10 @@ class Party {
       return null;
     else {
       return new Party(
-        timeOfTheParty: inputMap['timeOfTheParty'],
+        timeOfTheParty: DateTime.parse(inputMap['timeOfTheParty']),
         address: inputMap['address'],
-        drinks: inputMap['drinks'],
-        music: inputMap['music'],
+        drinks: Drinks.values.elementAt(inputMap['drinks']),
+        music: Music.values.elementAt(inputMap['music']),
         numberOfPeopleComming: inputMap['numberOfPeopleComming'],
         imageUrl: inputMap['imageUrl'],
         description: inputMap['description'],
@@ -74,7 +74,7 @@ class Party {
         partyCreatorUsername: inputMap['partyCreatorUsername'],
         partyCreatorImageUrl: inputMap['partyCreatorImageUrl'],
         likes: inputMap['likes'],
-        createdAt: inputMap['createdAt'],
+        createdAt: DateTime.parse(inputMap['createdAt']),
         coordinates: LatLng.fromMap(inputMap['coordinates']),
         partyCreatorId: inputMap['partyCreatorId'],
       );
@@ -85,18 +85,18 @@ class Party {
     return party == null
         ? null
         : {
-            'timeOfTheParty': party.timeOfTheParty,
+            'timeOfTheParty': party.timeOfTheParty.toIso8601String(),
             'address': party.address,
-            'drinks': party.drinks,
+            'drinks': party.drinks.index,
             'imageUrl': party.imageUrl,
             'numberOfPeopleComming': party.numberOfPeopleComming,
-            'music': party.music,
+            'music': party.music.index,
             'description': party.description,
             'title': party.title,
             'partyCreatorUsername': party.partyCreatorUsername,
             'partyCreatorImageUrl': party.partyCreatorImageUrl,
             'likes': party.likes,
-            'createdAt': party.createdAt,
+            'createdAt': party.createdAt.toIso8601String(),
             'coordinates': LatLng.toMap(party.coordinates),
             'partyCreatorId': party.partyCreatorId,
           };

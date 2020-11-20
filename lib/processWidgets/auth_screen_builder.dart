@@ -18,8 +18,8 @@ class AuthScreenBuilder extends StatelessWidget {
         stream: Provider.of<FirebaseAuthService>(context, listen: false)
             .userSnapshot,
         builder: (ctx, userSnapshot) {
-          final user = userSnapshot.data;
-          if (user != null) {
+          print(':::USER STREAM:::');
+          if (userSnapshot.data != null) {
             return MultiProvider(
               providers: [
                 Provider<FirebaseFirestoreService>(
