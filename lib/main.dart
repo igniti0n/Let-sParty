@@ -1,3 +1,4 @@
+import 'package:LetsParty/screens/party_detail_screen.dart';
 import 'package:flutter/material.dart';
 
 import './processWidgets/auth_widget.dart';
@@ -39,6 +40,7 @@ class MyApp extends StatelessWidget {
               textTheme: TextTheme(
                 headline1: TextStyle(
                     fontFamily: 'Rockwell',
+                    color: Colors.black,
                     fontSize: 20,
                     fontWeight: FontWeight.bold),
                 headline2: TextStyle(
@@ -47,8 +49,8 @@ class MyApp extends StatelessWidget {
                     fontSize: 17,
                     fontWeight: FontWeight.bold),
                 bodyText1: TextStyle(
-                    fontFamily: 'Rockwell',
-                    fontSize: 13,
+                    fontFamily: 'TimesNewRoman',
+                    fontSize: 15,
                     fontWeight: FontWeight.normal),
                 bodyText2: TextStyle(
                     fontFamily: 'Rockwell',
@@ -59,6 +61,7 @@ class MyApp extends StatelessWidget {
             ),
             routes: {
               UserDeligator.routeName: (ctx) => UserDeligator(),
+              PartyDetailScreen.routeName: (ctx) => PartyDetailScreen(),
             },
             // initialRoute: SignupScreen.routeName,
             home: AuthenticationWidget(

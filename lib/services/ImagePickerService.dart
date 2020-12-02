@@ -8,7 +8,7 @@ class ImagePickerService {
   Future<File> pickUserImage(ImageSource source) async {
     try {
       final pickedImage = await picker.getImage(
-          source: source, imageQuality: 50, maxWidth: 200);
+          source: source, imageQuality: 75, maxWidth: 200);
       return pickedImage == null ? null : new File(pickedImage.path);
     } catch (error) {
       throw error;
@@ -19,7 +19,9 @@ class ImagePickerService {
   Future<File> pickPartyImage(ImageSource source) async {
     try {
       final pickedImage = await picker.getImage(
-          source: source, imageQuality: 100, maxWidth: 1500);
+        source: source,
+        imageQuality: 100,
+      );
       return pickedImage == null ? null : new File(pickedImage.path);
     } catch (error) {
       throw error;

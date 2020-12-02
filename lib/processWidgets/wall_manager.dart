@@ -1,6 +1,8 @@
 import 'package:LetsParty/constants.dart';
 import 'package:flutter/material.dart';
 
+import '../screens/navigation_screens/user_wall.dart';
+import '../screens/navigation_screens/party_creation_screen.dart';
 import '../widgets/party_navigation_bar.dart';
 import '../screens/navigation_screens/news_feed.dart';
 
@@ -16,11 +18,36 @@ class WallManager extends StatelessWidget {
       body: PartyNavigationBar(
         screens: [
           NewsFeed(),
-          NewsFeed(),
-          NewsFeed(),
+          PartyCreationScreen(),
+          UserWall(),
           NewsFeed(),
         ],
-        onIndexChanged: (currentIndex) => print('index: $currentIndex'),
+        onIndexChanged: (currentIndex) async {
+          if (currentIndex == 1) {
+            return await showDialog(
+                context: context,
+                barrierDismissible: false,
+                // barrierColor: Colors.blue[50],
+                builder: (ctx) {
+                  return AlertDialog(
+                    content: Text('Your party setting wont be saved.'),
+                    title: Text('Warning !'),
+                    actions: [
+                      FlatButton.icon(
+                          onPressed: () => Navigator.of(ctx).pop(true),
+                          icon: Icon(Icons.delete),
+                          label: Text('delete')),
+                      FlatButton.icon(
+                          onPressed: () => Navigator.of(ctx).pop(false),
+                          icon: Icon(Icons.arrow_back),
+                          label: Text('keep'))
+                    ],
+                  );
+                });
+          }
+          print('index: $currentIndex');
+          return true;
+        },
       ),
     );
   }
@@ -33,19 +60,22 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _media = MediaQuery.of(context).size;
-    final _appBarHeight = _media.height / 11;
-    _size = Size(_media.width, _appBarHeight);
+    final _media = MediaQuery.of(context);
+    final _appBarHeight =
+        (_media.size.height / 11) + _media.viewPadding.top * 0.6;
+    _size = Size(_media.size.width, _appBarHeight);
 
     final TextStyle _style =
         Theme.of(context).textTheme.headline1.copyWith(color: Colors.white70);
 
     return Container(
+      alignment: Alignment.bottomCenter,
       width: preferredSize.width,
       height: preferredSize.height,
       color: Constants.kDarkGeneralColor,
       child: Padding(
-        padding: EdgeInsets.fromLTRB(20, _appBarHeight * 0.4, 20, 10),
+        padding: EdgeInsets.fromLTRB(
+            20, (_appBarHeight - _media.viewPadding.top) * 0.4, 20, 10),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -55,7 +85,7 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
             ),
             Icon(
               Icons.more_vert,
-              size: _appBarHeight * 0.5,
+              size: (_appBarHeight - _media.viewPadding.top * 0.6) * 0.5,
               color: Colors.white,
             ),
           ],

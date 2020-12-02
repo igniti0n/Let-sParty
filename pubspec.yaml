@@ -66,6 +66,15 @@ flutter:
     - assets/icons/profile-filled.png
     - assets/icons/wall-empty.png
     - assets/icons/wall-filled.png
+    - assets/icons/calendar.png
+    - assets/icons/peopleComing.png
+    - assets/icons/liver-empty.png
+    - assets/icons/liver-filled.png
+    - assets/icons/location.png
+    - assets/icons/time.png
+    - assets/icons/music.png
+
+
 
 
 

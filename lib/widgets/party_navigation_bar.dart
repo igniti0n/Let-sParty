@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 class PartyNavigationBar extends StatefulWidget {
   final List<Widget> screens;
-  final Function(int) onIndexChanged;
+  final Future<bool> Function(int) onIndexChanged;
   PartyNavigationBar({Key key, @required this.screens, this.onIndexChanged})
       : super(key: key);
 
@@ -14,9 +14,9 @@ class PartyNavigationBar extends StatefulWidget {
 class _PartyNavigationBarState extends State<PartyNavigationBar> {
   int _currentIndex = 0;
 
-  void _changeCurrentIndex(int index) {
+  void _changeCurrentIndex(int index) async {
     if (_currentIndex != index && mounted) {
-      widget.onIndexChanged(index);
+      if (!await widget.onIndexChanged(_currentIndex)) return;
       setState(() {
         _currentIndex = index;
       });
@@ -27,23 +27,17 @@ class _PartyNavigationBarState extends State<PartyNavigationBar> {
   Widget build(BuildContext context) {
     final _media = MediaQuery.of(context);
     final _size = _media.size;
-    final Size _individualItemSize = Size(_size.width / 4, _size.height / 11);
+    final Size _individualItemSize = Size(_size.width / 4, _size.height / 14);
 
     return Container(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          Container(
-            color: Color.fromRGBO(111, 99, 165, 0.05),
-            //alignment: Alignment.topCenter,
-            width: _size.width,
-            height: _size.height -
-                _individualItemSize.height -
-                _media.viewPadding.top -
-                _media.viewInsets.top -
-                _size.height / 11,
-            //color: Colors.blue,
-            child: widget.screens.elementAt(_currentIndex),
+          Expanded(
+            child: Container(
+              color: Color.fromRGBO(111, 99, 165, 0.05),
+              child: widget.screens.elementAt(_currentIndex),
+            ),
           ),
           Row(
             children: [
