@@ -39,7 +39,7 @@ class MyApp extends StatelessWidget {
               primaryColor: Color.fromRGBO(42, 31, 31, 1),
               textTheme: TextTheme(
                 headline1: TextStyle(
-                    fontFamily: 'Rockwell',
+                    fontFamily: 'Sylfaen',
                     color: Colors.black,
                     fontSize: 20,
                     fontWeight: FontWeight.bold),

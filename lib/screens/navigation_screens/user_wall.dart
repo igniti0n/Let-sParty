@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
 
+import '../../models/dummy_parties.dart';
+import '../../models/party.dart';
+import '../../services/FirebaseFirestoreService.dart';
+import 'package:provider/provider.dart';
+
 class UserWall extends StatefulWidget {
   const UserWall({Key key}) : super(key: key);
 
@@ -21,6 +26,10 @@ class _UserWallState extends State<UserWall> {
                 setState(() {
                   _number++;
                 });
+                DummyParties.parties.forEach((element) =>
+                    Provider.of<FirebaseFirestoreService>(context,
+                            listen: false)
+                        .storePartyInACollection(Party.toMap(element)));
               },
               child: Text('press me'),
             )

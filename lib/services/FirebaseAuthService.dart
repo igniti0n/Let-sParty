@@ -18,12 +18,16 @@ class FirebaseAuthService {
     }
   }
 
+//hello
+
   Future<User> signIn(String email, String password) async {
     try {
       final userCreditentials = await instance.createUserWithEmailAndPassword(
           email: email, password: password);
+          
       return userCreditentials.user;
     } catch (error) {
+      print(error);
       print(':::::: ERROR WHILE SIGNING IN :::::::');
       throw error;
     }

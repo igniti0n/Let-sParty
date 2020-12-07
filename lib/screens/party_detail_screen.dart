@@ -1,8 +1,10 @@
-import 'package:LetsParty/constants.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
+import 'package:LetsParty/constants.dart';
 import '../models/party.dart';
+import '../widgets/purple_button.dart';
+
+import 'package:intl/intl.dart';
 
 class PartyDetailScreen extends StatelessWidget {
   static final routeName = '/partyDetailScreen';
@@ -169,25 +171,14 @@ class PartyDetailScreen extends StatelessWidget {
           ),
           Positioned(
             bottom: 26,
-            left: _media.size.width / 4,
-            child: Container(
-              alignment: Alignment.center,
-              padding: EdgeInsets.all(15),
-              width: _media.size.width / 2,
-              decoration: BoxDecoration(
-                color: Constants.kButtonColor,
-                border:
-                    Border.all(color: Color.fromRGBO(97, 92, 92, 1), width: 2),
-                borderRadius: BorderRadius.circular(30),
-                boxShadow: [
-                  BoxShadow(
-                      offset: Offset(0, 1), color: Colors.black, blurRadius: 1)
-                ],
-              ),
-              child: Text(
-                'I am coming!',
-                style: _theme.textTheme.headline1,
-              ),
+            left: _media.size.width / 4.6,
+            child: PurpleButton(
+              text: 'I am coming!',
+              media: _media,
+              theme: _theme,
+              onTap: () {
+                print('TAP HHEHEH');
+              },
             ),
           ),
         ],

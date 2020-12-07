@@ -2,7 +2,7 @@ import 'package:LetsParty/constants.dart';
 import 'package:flutter/material.dart';
 
 import '../screens/navigation_screens/user_wall.dart';
-import '../screens/navigation_screens/party_creation_screen.dart';
+import '../screens/navigation_screens/party_creation_screens/party_creation_screens_manager.dart';
 import '../widgets/party_navigation_bar.dart';
 import '../screens/navigation_screens/news_feed.dart';
 
@@ -18,35 +18,42 @@ class WallManager extends StatelessWidget {
       body: PartyNavigationBar(
         screens: [
           NewsFeed(),
-          PartyCreationScreen(),
+          Container(),
           UserWall(),
           NewsFeed(),
         ],
         onIndexChanged: (currentIndex) async {
-          if (currentIndex == 1) {
-            return await showDialog(
-                context: context,
-                barrierDismissible: false,
-                // barrierColor: Colors.blue[50],
-                builder: (ctx) {
-                  return AlertDialog(
-                    content: Text('Your party setting wont be saved.'),
-                    title: Text('Warning !'),
-                    actions: [
-                      FlatButton.icon(
-                          onPressed: () => Navigator.of(ctx).pop(true),
-                          icon: Icon(Icons.delete),
-                          label: Text('delete')),
-                      FlatButton.icon(
-                          onPressed: () => Navigator.of(ctx).pop(false),
-                          icon: Icon(Icons.arrow_back),
-                          label: Text('keep'))
-                    ],
-                  );
-                });
-          }
+          // if (currentIndex == 1) {
+          //   return await showDialog(
+          //       context: context,
+          //       barrierDismissible: false,
+          //       // barrierColor: Colors.blue[50],
+          //       builder: (ctx) {
+          //         return AlertDialog(
+          //           content: Text('Your party setting wont be saved.'),
+          //           title: Text('Warning !'),
+          //           actions: [
+          //             FlatButton.icon(
+          //                 onPressed: () => Navigator.of(ctx).pop(true),
+          //                 icon: Icon(Icons.delete),
+          //                 label: Text('delete')),
+          //             FlatButton.icon(
+          //                 onPressed: () => Navigator.of(ctx).pop(false),
+          //                 icon: Icon(Icons.arrow_back),
+          //                 label: Text('keep'))
+          //           ],
+          //         );
+          //       });
+          // }
+          if (currentIndex == 1)
+            Navigator.of(context).push(new MaterialPageRoute(
+              builder: (ctx) {
+                return PartyCreationScreensManager();
+              },
+              fullscreenDialog: true,
+            ));
           print('index: $currentIndex');
-          return true;
+          // return true;
         },
       ),
     );
