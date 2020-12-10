@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 class PartyNavigationBar extends StatefulWidget {
   final List<Widget> screens;
-  final Function(int) onIndexChanged;
+  final bool Function(int) onIndexChanged;
   PartyNavigationBar({Key key, @required this.screens, this.onIndexChanged})
       : super(key: key);
 
@@ -20,7 +20,7 @@ class _PartyNavigationBarState extends State<PartyNavigationBar> {
       setState(() {
         _currentIndex = index;
       });
-      widget.onIndexChanged(_currentIndex);
+      if (widget.onIndexChanged(_currentIndex)) _currentIndex = 0;
     }
   }
 

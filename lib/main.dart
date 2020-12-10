@@ -49,7 +49,7 @@ class MyApp extends StatelessWidget {
                     fontSize: 17,
                     fontWeight: FontWeight.bold),
                 bodyText1: TextStyle(
-                    fontFamily: 'TimesNewRoman',
+                    fontFamily: 'Sylfaen',
                     fontSize: 15,
                     fontWeight: FontWeight.normal),
                 bodyText2: TextStyle(

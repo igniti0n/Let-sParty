@@ -1,11 +1,16 @@
+import 'package:LetsParty/widgets/purple_button.dart';
 import 'package:flutter/material.dart';
 
-import 'package:LetsParty/screens/navigation_screens/party_creation_screens/navigation_party_creation_widget.dart';
+import '../../../screens/navigation_screens/party_creation_screens/navigation_party_creation_widget.dart';
 import '../../../constants.dart';
+import '../../../services/ImagePickerService.dart';
 
 class PartyCreationScreenTitle extends StatelessWidget {
-  PartyCreationScreenTitle({Key key, this.onNext, this.initialValue})
-      : super(key: key);
+  PartyCreationScreenTitle({
+    Key key,
+    this.onNext,
+    @required this.initialValue,
+  }) : super(key: key);
   final GlobalKey<FormState> _formkey = new GlobalKey<FormState>();
   final String initialValue;
   final Function(Map<String, dynamic> data) onNext;
@@ -24,8 +29,10 @@ class PartyCreationScreenTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final media = MediaQuery.of(context);
+    final _media = MediaQuery.of(context);
+    final _theme = Theme.of(context);
     print('BUILDING TITLE');
+
     return Stack(
       children: [
         ...Constants.buildBackground(),
@@ -44,7 +51,7 @@ class PartyCreationScreenTitle extends StatelessWidget {
                         height: 50,
                       ),
                       Container(
-                        width: media.size.width / 1.5,
+                        width: _media.size.width / 1.5,
 
                         //TODO: ENFORCE TITLE LENGHT
                         child: TextFormField(
@@ -56,10 +63,8 @@ class PartyCreationScreenTitle extends StatelessWidget {
                             _titlePicutureData['title'] = text.trim();
                           },
                           textAlign: TextAlign.center,
-                          style: Theme.of(context)
-                              .textTheme
-                              .headline1
-                              .copyWith(fontSize: 26),
+                          style:
+                              _theme.textTheme.headline1.copyWith(fontSize: 26),
                           textAlignVertical: TextAlignVertical.center,
                           decoration: InputDecoration(
                             hintText: 'Your party title',
@@ -88,15 +93,48 @@ class PartyCreationScreenTitle extends StatelessWidget {
                 color: Colors.blueGrey.shade300,
                 indent: 20,
               ),
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 20.0, horizontal: 20),
+                child: Text(
+                  Constants.textPartyCreationTitle,
+                  style: _theme.textTheme.bodyText1
+                      .copyWith(color: Constants.kHelperTextColor, height: 1.5),
+                ),
+              ),
+              Container(
+                color: Color.fromRGBO(199, 199, 214, 0.5),
+                height: _media.size.height * 0.3,
+                child: Placeholder(
+                  color: Colors.grey[400],
+                ),
+              ),
+              Row(
+                children: [
+                  PurpleButtonCliped(
+                      media: _media, theme: _theme, onTap: () {}, text: 'hello')
+                ],
+              ),
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 20.0, horizontal: 20),
+                child: Text(
+                  Constants.textPartyCreationImage,
+                  style: _theme.textTheme.bodyText1.copyWith(
+                    color: Constants.kHelperTextColor,
+                    height: 1.5,
+                  ),
+                ),
+              ),
             ],
           ),
         ),
         NavigationPartyCreationWidget(
-          media: media,
+          media: _media,
           onNext: () {
             _tryToContinue();
           },
-          onPrevious: null,
+          onPrevious: () => Navigator.of(context).pop(),
         )
         //   bottom: 40,
         //   left: _media.size.width / 4.6,

@@ -26,10 +26,10 @@ class _UserWallState extends State<UserWall> {
                 setState(() {
                   _number++;
                 });
-                DummyParties.parties.forEach((element) =>
-                    Provider.of<FirebaseFirestoreService>(context,
-                            listen: false)
-                        .storePartyInACollection(Party.toMap(element)));
+                // DummyParties.parties.forEach((element) =>
+                //     Provider.of<FirebaseFirestoreService>(context,
+                //             listen: false)
+                //         .storePartyInACollection(Party.toMap(element)));
               },
               child: Text('press me'),
             )

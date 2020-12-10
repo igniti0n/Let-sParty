@@ -22,7 +22,7 @@ class WallManager extends StatelessWidget {
           UserWall(),
           NewsFeed(),
         ],
-        onIndexChanged: (currentIndex) async {
+        onIndexChanged: (currentIndex) {
           // if (currentIndex == 1) {
           //   return await showDialog(
           //       context: context,
@@ -45,14 +45,17 @@ class WallManager extends StatelessWidget {
           //         );
           //       });
           // }
-          if (currentIndex == 1)
+          if (currentIndex == 1) {
             Navigator.of(context).push(new MaterialPageRoute(
               builder: (ctx) {
                 return PartyCreationScreensManager();
               },
               fullscreenDialog: true,
             ));
+            return true;
+          }
           print('index: $currentIndex');
+          return false;
           // return true;
         },
       ),
