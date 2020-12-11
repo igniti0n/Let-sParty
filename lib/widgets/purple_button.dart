@@ -39,12 +39,14 @@ class PurpleButton extends StatelessWidget {
         child: Text(
           text,
           style: _theme.textTheme.headline1
-              .copyWith(color: Color.fromRGBO(68, 42, 42, 1)),
+              .copyWith(color: Constants.kPurpleButtonTextColor),
         ),
       ),
     );
   }
 }
+
+enum ClipedSide { Left, Right }
 
 class PurpleButtonCliped extends StatelessWidget {
   const PurpleButtonCliped({
@@ -52,15 +54,17 @@ class PurpleButtonCliped extends StatelessWidget {
     @required MediaQueryData media,
     @required ThemeData theme,
     @required this.onTap,
-    @required this.text,
+    this.clipedSide = ClipedSide.Right,
+    this.child,
   })  : _media = media,
-        _theme = theme,
         super(key: key);
 
   final MediaQueryData _media;
-  final ThemeData _theme;
+
   final Function onTap;
-  final String text;
+
+  final ClipedSide clipedSide;
+  final Widget child;
 
   @override
   Widget build(BuildContext context) {
@@ -76,35 +80,34 @@ class PurpleButtonCliped extends StatelessWidget {
                 blurRadius: 1,
               )
             ],
-            clipper: ButtonClipper(),
+            clipper: ButtonClipper(this.clipedSide),
             child: Container(
               clipBehavior: Clip.none,
               alignment: Alignment.center,
-              padding: EdgeInsets.all(12),
-              width: _media.size.width / 2,
+              height: _media.size.height * 0.055,
+              //padding: EdgeInsets.symmetric(vertical: 12, horizontal: 4),
+              width: _media.size.width / 2.1,
               decoration: BoxDecoration(
                 color: onTap == null ? Colors.grey : Constants.kButtonColor,
-                border:
-                    Border.all(color: Color.fromRGBO(97, 92, 92, 1), width: 4),
+                // border:
+                //Border.all(color: Color.fromRGBO(97, 92, 92, 1), width: 4),
                 //borderRadius: BorderRadius.circular(15),
                 // boxShadow: [
                 //   BoxShadow(offset: Offset(0, 1), color: Colors.black, blurRadius: 1)
                 // ],
               ),
-              child: Text(
-                text,
-                style: _theme.textTheme.headline1
-                    .copyWith(color: Color.fromRGBO(68, 42, 42, 1)),
+              child: Padding(
+                padding: clipedSide == ClipedSide.Right
+                    ? const EdgeInsets.fromLTRB(0, 4, 40, 4)
+                    : const EdgeInsets.fromLTRB(40, 4, 0, 4),
+                child: child,
               ),
             ),
           ),
           CustomPaint(
-            painter: BorderPainter(Size(_media.size.width / 2, 27)),
-            child: Text(
-              text,
-              style: _theme.textTheme.headline1
-                  .copyWith(color: Color.fromRGBO(68, 42, 42, 1)),
-            ),
+            painter: BorderPainter(
+                Size(_media.size.width / 2.1, _media.size.height * 0.055),
+                this.clipedSide),
           ),
         ],
       ),
@@ -114,22 +117,31 @@ class PurpleButtonCliped extends StatelessWidget {
 
 class BorderPainter extends CustomPainter {
   final Size sizeReal;
-  BorderPainter(this.sizeReal);
+  final ClipedSide clipedSide;
+  const BorderPainter(this.sizeReal, this.clipedSide);
   @override
   void paint(Canvas canvas, Size size) {
     // TODO: implement paint
     Paint paint = new Paint()
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 4.0
+      ..strokeWidth = 2.0
       ..color = Color.fromRGBO(97, 92, 92, 1);
 
     final _path = new Path();
 
-    _path.lineTo(0, 0);
-    _path.lineTo(sizeReal.width - 10, 0);
-    _path.lineTo(sizeReal.width - 40, sizeReal.height);
-    _path.lineTo(0, sizeReal.height);
-    _path.lineTo(0, 0);
+    if (clipedSide == ClipedSide.Right) {
+      _path.lineTo(0, 0);
+      _path.lineTo(sizeReal.width, 0);
+      _path.lineTo(sizeReal.width - 40, sizeReal.height);
+      _path.lineTo(0, sizeReal.height);
+      _path.lineTo(0, 0);
+    } else {
+      _path.moveTo(40, 0);
+      _path.lineTo(sizeReal.width, 0);
+      _path.lineTo(sizeReal.width, sizeReal.height);
+      _path.lineTo(0, sizeReal.height);
+      _path.lineTo(40, 0);
+    }
 
     _path.close();
 
@@ -144,17 +156,27 @@ class BorderPainter extends CustomPainter {
 }
 
 class ButtonClipper extends CustomClipper<Path> {
+  final ClipedSide clipedSide;
+  const ButtonClipper(this.clipedSide);
   @override
   Path getClip(Size size) {
     // TODO: implement getClip
 
     final _path = new Path();
 
-    _path.lineTo(0, 0);
-    _path.lineTo(size.width - 10, 0);
-    _path.lineTo(size.width - 40, size.height);
-    _path.lineTo(0, size.height);
-    _path.lineTo(0, 0);
+    if (clipedSide == ClipedSide.Right) {
+      _path.lineTo(0, 0);
+      _path.lineTo(size.width, 0);
+      _path.lineTo(size.width - 40, size.height);
+      _path.lineTo(0, size.height);
+      _path.lineTo(0, 0);
+    } else {
+      _path.lineTo(40, 0);
+      _path.lineTo(size.width, 0);
+      _path.lineTo(size.width, size.height);
+      _path.lineTo(0, size.height);
+      _path.lineTo(40, 0);
+    }
 
     _path.close();
 

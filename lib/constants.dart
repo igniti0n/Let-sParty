@@ -8,6 +8,7 @@ class Constants {
   static const kAuthBoxColor = Color.fromRGBO(243, 241, 241, 1);
   static const kDarkGeneralColor = Color.fromRGBO(42, 31, 31, 1);
   static const kHelperTextColor = Color.fromRGBO(148, 144, 144, 1);
+  static const kPurpleButtonTextColor = Color.fromRGBO(68, 42, 42, 1);
 
   static const String textPartyCreationTitle =
       "Set a short cool/fun name for your party ! Name can be anything, it does not need to explain the party, you can add description later !";

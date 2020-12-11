@@ -1,19 +1,33 @@
-import 'package:LetsParty/widgets/purple_button.dart';
-import 'package:flutter/material.dart';
+import 'dart:io';
 
+import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+
+import '../../../widgets/purple_button.dart';
 import '../../../screens/navigation_screens/party_creation_screens/navigation_party_creation_widget.dart';
 import '../../../constants.dart';
 import '../../../services/ImagePickerService.dart';
 
-class PartyCreationScreenTitle extends StatelessWidget {
+import 'package:provider/provider.dart';
+
+class PartyCreationScreenTitle extends StatefulWidget {
   PartyCreationScreenTitle({
     Key key,
     this.onNext,
-    @required this.initialValue,
+    @required this.initialValueText,
+    @required this.initialValuePicture,
   }) : super(key: key);
-  final GlobalKey<FormState> _formkey = new GlobalKey<FormState>();
-  final String initialValue;
+  final String initialValueText;
+  final String initialValuePicture;
   final Function(Map<String, dynamic> data) onNext;
+
+  @override
+  _PartyCreationScreenTitleState createState() =>
+      _PartyCreationScreenTitleState();
+}
+
+class _PartyCreationScreenTitleState extends State<PartyCreationScreenTitle> {
+  final GlobalKey<FormState> _formkey = new GlobalKey<FormState>();
 
   Map<String, dynamic> _titlePicutureData = {
     'title': '',
@@ -22,8 +36,11 @@ class PartyCreationScreenTitle extends StatelessWidget {
 
   void _tryToContinue() {
     if (_formkey.currentState.validate()) {
+      if (_titlePicutureData['imageUrl'] == '' &&
+          widget.initialValuePicture == '')
+        return; //TODO: ADD SNACKBAR FOR NO IMAGE SELECTED
       _formkey.currentState.save();
-      onNext(_titlePicutureData);
+      widget.onNext(_titlePicutureData);
     }
   }
 
@@ -40,7 +57,7 @@ class PartyCreationScreenTitle extends StatelessWidget {
           child: Column(
             children: [
               Padding(
-                padding: const EdgeInsets.fromLTRB(10.0, 20, 20, 0),
+                padding: const EdgeInsets.fromLTRB(10.0, 40, 20, 0),
                 child: Form(
                   key: _formkey,
                   child: Row(
@@ -55,9 +72,9 @@ class PartyCreationScreenTitle extends StatelessWidget {
 
                         //TODO: ENFORCE TITLE LENGHT
                         child: TextFormField(
-                          initialValue: initialValue,
+                          initialValue: widget.initialValueText,
                           validator: (text) {
-                            if (text.length > 15) return 'Title too long';
+                            if (text.length > 20) return 'Title too long';
                           },
                           onSaved: (text) {
                             _titlePicutureData['title'] = text.trim();
@@ -105,15 +122,92 @@ class PartyCreationScreenTitle extends StatelessWidget {
               Container(
                 color: Color.fromRGBO(199, 199, 214, 0.5),
                 height: _media.size.height * 0.3,
-                child: Placeholder(
-                  color: Colors.grey[400],
-                ),
+                width: _media.size.width,
+                child: (widget.initialValuePicture == '' &&
+                        _titlePicutureData['imageUrl'] == '')
+                    ? Placeholder(
+                        color: Colors.grey[400],
+                      )
+                    : Image.file(
+                        File(
+                          widget.initialValuePicture == ''
+                              ? _titlePicutureData['imageUrl']
+                              : widget.initialValuePicture,
+                        ),
+                        fit: BoxFit.fill,
+                      ),
               ),
-              Row(
-                children: [
-                  PurpleButtonCliped(
-                      media: _media, theme: _theme, onTap: () {}, text: 'hello')
-                ],
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    PurpleButtonCliped(
+                      media: _media,
+                      theme: _theme,
+                      onTap: () async {
+                        final File _result =
+                            await Provider.of<ImagePickerService>(context,
+                                    listen: false)
+                                .pickPartyImage(ImageSource.camera);
+                        if (_result != null)
+                          setState(() {
+                            _titlePicutureData['imageUrl'] = _result.path;
+                          });
+                      },
+                      clipedSide: ClipedSide.Right,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Icon(
+                            Icons.camera,
+                            size: _media.size.height * 0.04,
+                          ),
+                          Text(
+                            'Picture',
+                            style: _theme.textTheme.bodyText1.copyWith(
+                              color: Constants.kPurpleButtonTextColor,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                    PurpleButtonCliped(
+                      media: _media,
+                      theme: _theme,
+                      onTap: () async {
+                        final File _result =
+                            await Provider.of<ImagePickerService>(context,
+                                    listen: false)
+                                .pickPartyImage(ImageSource.gallery);
+                        if (_result != null)
+                          setState(() {
+                            _titlePicutureData['imageUrl'] = _result.path;
+                          });
+                      },
+                      clipedSide: ClipedSide.Left,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Text(
+                            'Gallery',
+                            style: _theme.textTheme.bodyText1.copyWith(
+                              color: Constants.kPurpleButtonTextColor,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Icon(
+                            Icons.image_rounded,
+                            size: _media.size.height * 0.04,
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
               ),
               Padding(
                 padding:
@@ -125,6 +219,9 @@ class PartyCreationScreenTitle extends StatelessWidget {
                     height: 1.5,
                   ),
                 ),
+              ),
+              SizedBox(
+                height: 150,
               ),
             ],
           ),

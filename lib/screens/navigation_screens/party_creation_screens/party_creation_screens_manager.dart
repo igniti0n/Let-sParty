@@ -51,10 +51,13 @@ class _PartyCreationScreensManagerState
   Widget _buildCurrentScreen() {
     if (_currentScreen == CreationScreen.Title) {
       return PartyCreationScreenTitle(
-        initialValue: _newParty['title'],
+        initialValueText: _newParty['title'],
+        initialValuePicture: _newParty['imageUrl'],
         onNext: (titlePictureData) {
-          _newParty['title'] = titlePictureData['title'] ?? '';
-          _newParty['imageUrl'] = titlePictureData['imageUrl'] ?? '';
+          if (titlePictureData['title'] != '')
+            _newParty['title'] = titlePictureData['title'];
+          if (titlePictureData['imageUrl'] != '')
+            _newParty['imageUrl'] = titlePictureData['imageUrl'];
           _changeScreen(
               CreationScreen.values.elementAt(_currentScreen.index + 1));
         },
