@@ -7,8 +7,10 @@ class Constants {
   static const kAuthTextColor = Color.fromRGBO(117, 107, 107, 1);
   static const kAuthBoxColor = Color.fromRGBO(243, 241, 241, 1);
   static const kDarkGeneralColor = Color.fromRGBO(42, 31, 31, 1);
-  static const kHelperTextColor = Color.fromRGBO(148, 144, 144, 1);
+  static const kHelperTextColor = Color.fromRGBO(128, 124, 124, 1);
   static const kPurpleButtonTextColor = Color.fromRGBO(68, 42, 42, 1);
+
+  static const GOOGLE_API_KEY = 'AIzaSyBBXGnPlC0G6iWUlqwmegOktq8mtr6oPlk';
 
   static const String textPartyCreationTitle =
       "Set a short cool/fun name for your party ! Name can be anything, it does not need to explain the party, you can add description later !";

@@ -36,9 +36,9 @@ class _PartyCreationScreenTitleState extends State<PartyCreationScreenTitle> {
 
   void _tryToContinue() {
     if (_formkey.currentState.validate()) {
-      if (_titlePicutureData['imageUrl'] == '' &&
-          widget.initialValuePicture == '')
-        return; //TODO: ADD SNACKBAR FOR NO IMAGE SELECTED
+      // if (_titlePicutureData['imageUrl'] == '' &&
+      //     widget.initialValuePicture == '')
+      // return; //TODO: ADD SNACKBAR FOR NO IMAGE SELECTED
       _formkey.currentState.save();
       widget.onNext(_titlePicutureData);
     }
@@ -57,7 +57,7 @@ class _PartyCreationScreenTitleState extends State<PartyCreationScreenTitle> {
           child: Column(
             children: [
               Padding(
-                padding: const EdgeInsets.fromLTRB(10.0, 40, 20, 0),
+                padding: const EdgeInsets.fromLTRB(10.0, 30, 20, 0),
                 child: Form(
                   key: _formkey,
                   child: Row(
