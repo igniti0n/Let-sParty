@@ -40,6 +40,7 @@ class Party {
   final String partyCreatorUsername;
   final String partyCreatorImageUrl;
   final String partyCreatorId;
+  final String slogan;
 
   Party({
     this.timeOfTheParty,
@@ -55,6 +56,7 @@ class Party {
     this.likes = 0,
     this.createdAt,
     this.coordinates,
+    this.slogan,
     this.partyCreatorId,
   });
 
@@ -77,6 +79,7 @@ class Party {
         createdAt: DateTime.parse(inputMap['createdAt']),
         coordinates: LatLng.fromMap(inputMap['coordinates']),
         partyCreatorId: inputMap['partyCreatorId'],
+        slogan: inputMap['slogan'],
       );
     }
   }
@@ -99,6 +102,7 @@ class Party {
             'createdAt': party.createdAt.toIso8601String(),
             'coordinates': LatLng.toMap(party.coordinates),
             'partyCreatorId': party.partyCreatorId,
+            'slogan': party.slogan,
           };
   }
 }

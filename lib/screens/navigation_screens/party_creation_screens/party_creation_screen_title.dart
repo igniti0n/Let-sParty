@@ -45,6 +45,12 @@ class _PartyCreationScreenTitleState extends State<PartyCreationScreenTitle> {
   }
 
   @override
+  void dispose() {
+    _formkey.currentState?.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final _media = MediaQuery.of(context);
     final _theme = Theme.of(context);

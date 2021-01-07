@@ -39,6 +39,7 @@ class _PartyCreationScreensManagerState
     'createdAt': '',
     'coordinates': null,
     'partyCreatorId': '',
+    'slogan': '',
   };
 
   DateTime _datePicked = null;
@@ -48,6 +49,10 @@ class _PartyCreationScreensManagerState
     setState(() {
       _currentScreen = screenToChangeTo;
     });
+  }
+
+  Future<bool> _tryToAddParty() async {
+    return false;
   }
 
   void _saveSpecifics(Map<String, dynamic> specificsData) {
@@ -62,6 +67,11 @@ class _PartyCreationScreensManagerState
 
     _newParty['drinks'] = specificsData['drinks'];
     _newParty['music'] = specificsData['music'];
+  }
+
+  void _saveDescription(String slog, String desc) {
+    _newParty['slogan'] = slog;
+    _newParty['description'] = desc;
   }
 
   Widget _buildCurrentScreen() {
@@ -101,7 +111,21 @@ class _PartyCreationScreensManagerState
         },
       );
     } else {
-      return PartyCreationScreenDetails();
+      return PartyCreationScreenDetails(
+        descriptionInitialValue: _newParty['description'],
+        sloganInitialValue: _newParty['slogan'],
+        onNext: (slogan, description) {
+          _saveDescription(slogan, description);
+          _tryToAddParty().then((isSuccess) {
+            if (isSuccess) Navigator.of(context).pop();
+          });
+        },
+        onPrevious: (slogan, description) {
+          _saveDescription(slogan, description);
+          _changeScreen(
+              CreationScreen.values.elementAt(_currentScreen.index - 1));
+        },
+      );
     }
   }
 

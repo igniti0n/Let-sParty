@@ -13,7 +13,7 @@ class PartyPost extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final _size = MediaQuery.of(context).size;
-    final _postSize = _size.height / 1.3;
+    final _postSize = _size.height / 1.265;
     final _detailSize = _postSize * 0.50;
     final _theme = Theme.of(context);
 
@@ -133,9 +133,10 @@ class PartyPost extends StatelessWidget {
                 // ),
                 Center(
                   child: Padding(
-                    padding: const EdgeInsets.fromLTRB(0, 18, 0, 18),
+                    padding: const EdgeInsets.fromLTRB(18, 18, 0, 18),
                     child: Text(
-                      '"Jebeš sutra, pij do jutra"',
+                      '"Jebeš sutra, pij do jutra. Sutra tko ziv, tko mrtav."',
+                      textAlign: TextAlign.center,
                       style: _theme.textTheme.headline1
                           .copyWith(fontSize: 20, color: Colors.grey[900]),
                     ),
@@ -151,7 +152,7 @@ class PartyPost extends StatelessWidget {
                         indent: 20,
                       ),
                       Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 4.0),
+                        padding: const EdgeInsets.symmetric(vertical: 2.0),
                         child: GestureDetector(
                           onTap: () => Navigator.of(context).pushNamed(
                               PartyDetailScreen.routeName,
@@ -173,13 +174,13 @@ class PartyPost extends StatelessWidget {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  padding: const EdgeInsets.symmetric(vertical: 4.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       Image.asset(
                         'assets/icons/liver-empty.png',
-                        height: _detailSize * 0.14,
+                        height: _detailSize * 0.13,
                       ),
                       Text(
                         'Your liver is safe from this party',
