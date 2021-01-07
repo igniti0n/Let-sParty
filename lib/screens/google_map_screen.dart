@@ -52,14 +52,21 @@ class _MapScreenState extends State<MapScreen> {
                   _pickedLocation = location;
                 });
               },
-        markers: _pickedLocation == null
-            ? null
-            : {
+        markers: !widget.isSelecting
+            ? {
                 Marker(
                   markerId: MarkerId('m1'),
-                  position: _pickedLocation,
+                  position: widget.initialLocation,
                 )
-              },
+              }
+            : _pickedLocation == null
+                ? null
+                : {
+                    Marker(
+                      markerId: MarkerId('m1'),
+                      position: _pickedLocation,
+                    )
+                  },
       ),
     );
   }

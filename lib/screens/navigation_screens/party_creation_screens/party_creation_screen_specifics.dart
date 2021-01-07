@@ -1,5 +1,6 @@
 import 'package:LetsParty/models/lat_long.dart';
 import 'package:LetsParty/models/party.dart';
+import 'package:LetsParty/services/LocationService.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -12,11 +13,24 @@ import 'package:google_maps_flutter/google_maps_flutter.dart' as maps
 import 'package:location/location.dart';
 
 class PartyCreationScreenSpecifics extends StatefulWidget {
-  PartyCreationScreenSpecifics({Key key, this.onNext, this.onPrevious})
-      : super(key: key);
+  Map<String, dynamic> initialData;
+
+  PartyCreationScreenSpecifics({
+    Key key,
+    this.onNext,
+    this.onPrevious,
+    this.initialData = const {
+      'address': '',
+      'drinks': Drinks.BringYourOwnBooze,
+      'music': Music.Techno,
+      'date': '',
+      'time': null as TimeOfDay,
+      'coordinates': null as LatLng, //LatLng(latitude: 20, longitude: 20),
+    },
+  }) : super(key: key);
 
   final Function(Map<String, dynamic> speficisData) onNext;
-  final Function() onPrevious;
+  final Function(Map<String, dynamic> speficisData) onPrevious;
 
   @override
   _PartyCreationScreenSpecificsState createState() =>
@@ -26,16 +40,88 @@ class PartyCreationScreenSpecifics extends StatefulWidget {
 class _PartyCreationScreenSpecificsState
     extends State<PartyCreationScreenSpecifics> {
   Map<String, dynamic> _specificsData = {
-    'address': 'Ulica kralja Petra Svačića 1c',
+    'address': '',
     'drinks': Drinks.BringYourOwnBooze,
-    'numberOfPeopleComming': 0,
     'music': Music.Techno,
     'date': '',
-    'time': '',
-    'coordinates': LatLng(latitude: 0, longitude: 0)
+    'time': null as TimeOfDay,
+    'coordinates': null as LatLng, //LatLng(latitude: 20, longitude: 20),
   };
+
   int _musicIndex = 1;
   int _drinksIndex = 1;
+
+  @override
+  void initState() {
+    super.initState();
+    _specificsData = widget.initialData;
+    _musicIndex = Music.values
+            .indexWhere((element) => element == _specificsData['music']) +
+        1;
+    _drinksIndex = Drinks.values
+            .indexWhere((element) => element == _specificsData['drinks']) +
+        1;
+  }
+
+  void _chooseFromMap() async {
+    Location location = new Location();
+
+    // bool _serviceEnabled;
+    // PermissionStatus _permissionGranted;
+    LocationData _locationData;
+
+    // _serviceEnabled = await location.serviceEnabled();
+    // if (!_serviceEnabled) {
+    //   _serviceEnabled = await location.requestService();
+    //   if (!_serviceEnabled) {
+    //     return;
+    //   }
+    // }
+
+    // _permissionGranted = await location.hasPermission();
+    // if (_permissionGranted == PermissionStatus.denied) {
+    //   _permissionGranted = await location.requestPermission();
+    //   if (_permissionGranted != PermissionStatus.granted) {
+    //     return;
+    //   }
+    // }
+    _locationData = await location.getLocation();
+
+    print(_locationData);
+
+    final maps.LatLng _result =
+        await Navigator.of(context).push(MaterialPageRoute(
+      fullscreenDialog: true,
+      builder: (ctx) => MapScreen(
+        isSelecting: true,
+        initialLocation: _specificsData['coordinates'] == null
+            ? maps.LatLng(
+                _locationData.latitude,
+                _locationData.longitude,
+              )
+            : maps.LatLng(
+                _specificsData['coordinates'].latitude,
+                _specificsData['coordinates'].longitude,
+              ),
+      ),
+    ));
+
+    if (_result == null) return;
+    _specificsData['coordinates'] =
+        LatLng(latitude: _result.latitude, longitude: _result.longitude);
+
+    print('${_result.latitude} :  ${_result.longitude}');
+
+    final String _address = await LocationService.getAddressFromLatLng(
+      _result.latitude,
+      _result.longitude,
+    );
+    setState(() {
+      _specificsData['address'] =
+          _address.split(',').first + ',' + _address.split(',')[2];
+      print(_address);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -137,21 +223,22 @@ class _PartyCreationScreenSpecificsState
                 specificsData: _specificsData,
                 theme: _theme,
                 assetsPath: 'assets/icons/time.png',
-                value: (_specificsData['date'] == '')
+                value: (_specificsData['time'] == null)
                     ? ''
-                    : (DateFormat.yMMMEd()
-                            .format(DateTime.parse(_specificsData['date'])) +
-                        '    '),
+                    : '${_specificsData['time'].hour} : ${_specificsData['time'].minute}',
                 iconHeight: _media.size.height * 0.045,
               ),
               Container(
                 alignment: Alignment.bottomCenter,
                 child: GestureDetector(
                   onTap: () async {
-                    final TimeOfDay result = await showTimePicker(
+                    final TimeOfDay _result = await showTimePicker(
                       context: context,
                       initialTime: TimeOfDay.now(),
                     );
+                    setState(() {
+                      _specificsData['time'] = _result;
+                    });
                   },
                   child: Text(
                     '  Choose time',
@@ -174,48 +261,7 @@ class _PartyCreationScreenSpecificsState
               Container(
                 alignment: Alignment.bottomCenter,
                 child: InkWell(
-                  onTap: () async {
-                    Location location = new Location();
-
-                    // bool _serviceEnabled;
-                    // PermissionStatus _permissionGranted;
-                    LocationData _locationData;
-
-                    // _serviceEnabled = await location.serviceEnabled();
-                    // if (!_serviceEnabled) {
-                    //   _serviceEnabled = await location.requestService();
-                    //   if (!_serviceEnabled) {
-                    //     return;
-                    //   }
-                    // }
-
-                    // _permissionGranted = await location.hasPermission();
-                    // if (_permissionGranted == PermissionStatus.denied) {
-                    //   _permissionGranted = await location.requestPermission();
-                    //   if (_permissionGranted != PermissionStatus.granted) {
-                    //     return;
-                    //   }
-                    // }
-
-                    _locationData = await location.getLocation();
-                    print(_locationData);
-
-                    final maps.LatLng _result =
-                        await Navigator.of(context).push(MaterialPageRoute(
-                            fullscreenDialog: true,
-                            builder: (ctx) => MapScreen(
-                                  isSelecting: true,
-                                  initialLocation: maps.LatLng(
-                                    _locationData.latitude,
-                                    _locationData.longitude,
-                                  ),
-                                )));
-
-                    if (_result == null) return;
-                    setState(() {
-                      print('${_result.latitude} :  ${_result.longitude}');
-                    });
-                  },
+                  onTap: _chooseFromMap,
                   child: Text(
                     '  Choose Location',
                     style: _theme.textTheme.bodyText1
@@ -234,6 +280,7 @@ class _PartyCreationScreenSpecificsState
                   padding:
                       const EdgeInsets.symmetric(horizontal: 20.0, vertical: 0),
                   child: GridView.count(
+                    //TODO:  Grid can be scrolled, find a way to remove that feature / or use different approach
                     crossAxisCount: 2,
                     // crossAxisSpacing: 10,
                     mainAxisSpacing: 0,
@@ -252,10 +299,12 @@ class _PartyCreationScreenSpecificsState
                         //           ))
                         //       .toList();
                         // },
-                        value: _musicIndex,
+                        value: _drinksIndex,
                         onChanged: (value) {
                           setState(() {
-                            _musicIndex = value;
+                            _drinksIndex = value;
+                            _specificsData['drinks'] =
+                                Drinks.values.elementAt(_drinksIndex - 1);
                           });
                         },
                         items: [
@@ -274,12 +323,15 @@ class _PartyCreationScreenSpecificsState
                         ],
                       ),
                       DropButton(
-                        value: _drinksIndex,
+                        value: _musicIndex,
                         iconPath: 'assets/icons/music.png',
                         media: _media,
                         onChanged: (value) {
                           setState(() {
-                            _drinksIndex = value;
+                            _musicIndex = value;
+                            _specificsData['music'] =
+                                Music.values.elementAt(_musicIndex - 1);
+                            print(_specificsData['music']);
                           });
                         },
                         items: [
@@ -309,15 +361,15 @@ class _PartyCreationScreenSpecificsState
                   ),
                 ),
               ),
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 20.0, horizontal: 28),
-                child: Text(
-                  Constants.textPartyCreationSpecificsBlock,
-                  style: _theme.textTheme.bodyText1
-                      .copyWith(color: Constants.kHelperTextColor, height: 1.5),
-                ),
-              ),
+              // Padding(
+              //   padding:
+              //       const EdgeInsets.symmetric(vertical: 20.0, horizontal: 28),
+              //   child: Text(
+              //     Constants.textPartyCreationSpecificsBlock,
+              //     style: _theme.textTheme.bodyText1
+              //         .copyWith(color: Constants.kHelperTextColor, height: 1.5),
+              //   ),
+              // ),
               SizedBox(
                 height: 160,
               ),
@@ -325,9 +377,10 @@ class _PartyCreationScreenSpecificsState
           ),
         ),
         NavigationPartyCreationWidget(
-            media: _media,
-            onNext: () => widget.onNext(_specificsData),
-            onPrevious: widget.onPrevious)
+          media: _media,
+          onNext: () => widget.onNext(_specificsData),
+          onPrevious: () => widget.onPrevious(_specificsData),
+        )
         //   bottom: 40,
         //   left: _media.size.width / 4.6,
         // ),
@@ -423,7 +476,7 @@ class SpecificsButonPicker extends StatelessWidget {
               Text(
                 value,
                 style: _theme.textTheme.headline2,
-                overflow: TextOverflow.fade,
+                overflow: TextOverflow.clip,
               ),
               Divider(
                 color: Colors.grey[600],

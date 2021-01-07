@@ -30,7 +30,6 @@ class _PartyCreationScreensManagerState
     'address': '',
     'drinks': Drinks.BringYourOwnBooze,
     'imageUrl': '',
-    'numberOfPeopleComming': '',
     'music': Music.House,
     'description': '',
     'title': '',
@@ -38,14 +37,31 @@ class _PartyCreationScreensManagerState
     'partyCreatorImageUrl': '',
     'likes': '',
     'createdAt': '',
-    'coordinates': '',
+    'coordinates': null,
     'partyCreatorId': '',
   };
+
+  DateTime _datePicked = null;
+  TimeOfDay _timePicked = null;
 
   void _changeScreen(CreationScreen screenToChangeTo) {
     setState(() {
       _currentScreen = screenToChangeTo;
     });
+  }
+
+  void _saveSpecifics(Map<String, dynamic> specificsData) {
+    if (specificsData['address'] != '')
+      _newParty['address'] = specificsData['address'];
+    if (specificsData['coordinates'] != null)
+      _newParty['coordinates'] = specificsData['coordinates'];
+
+    if (specificsData['time'] != null) _timePicked = specificsData['time'];
+    if (specificsData['date'] != '')
+      _datePicked = DateTime.parse(specificsData['date']);
+
+    _newParty['drinks'] = specificsData['drinks'];
+    _newParty['music'] = specificsData['music'];
   }
 
   Widget _buildCurrentScreen() {
@@ -64,11 +80,22 @@ class _PartyCreationScreensManagerState
       );
     } else if (_currentScreen == CreationScreen.Specifics) {
       return PartyCreationScreenSpecifics(
+        initialData: {
+          'address': _newParty['address'],
+          'drinks': _newParty['drinks'],
+          'music': _newParty['music'],
+          'date': _datePicked?.toIso8601String() ?? '',
+          'time': _timePicked,
+          'coordinates':
+              _newParty['coordinates'], //LatLng(latitude: 20, longitude: 20),
+        },
         onNext: (specificsData) {
+          _saveSpecifics(specificsData);
           _changeScreen(
               CreationScreen.values.elementAt(_currentScreen.index + 1));
         },
-        onPrevious: () {
+        onPrevious: (specificsData) {
+          _saveSpecifics(specificsData);
           _changeScreen(
               CreationScreen.values.elementAt(_currentScreen.index - 1));
         },

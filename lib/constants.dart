@@ -10,8 +10,6 @@ class Constants {
   static const kHelperTextColor = Color.fromRGBO(128, 124, 124, 1);
   static const kPurpleButtonTextColor = Color.fromRGBO(68, 42, 42, 1);
 
-  static const GOOGLE_API_KEY = 'AIzaSyBBXGnPlC0G6iWUlqwmegOktq8mtr6oPlk';
-
   static const String textPartyCreationTitle =
       "Set a short cool/fun name for your party ! Name can be anything, it does not need to explain the party, you can add description later !";
   static const String textPartyCreationImage =
