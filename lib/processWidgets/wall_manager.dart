@@ -1,10 +1,13 @@
-import 'package:LetsParty/constants.dart';
 import 'package:flutter/material.dart';
 
+import '../constants.dart';
+import '../models/user.dart';
 import '../screens/navigation_screens/user_wall.dart';
 import '../screens/navigation_screens/party_creation_screens/party_creation_screens_manager.dart';
 import '../widgets/party_navigation_bar.dart';
 import '../screens/navigation_screens/news_feed.dart';
+
+import 'package:provider/provider.dart';
 
 class WallManager extends StatelessWidget {
   const WallManager({Key key}) : super(key: key);
@@ -24,7 +27,9 @@ class WallManager extends StatelessWidget {
           if (currentIndex == 1) {
             Navigator.of(context).push(new MaterialPageRoute(
               builder: (ctx) {
-                return PartyCreationScreensManager();
+                return PartyCreationScreensManager(
+                  userData: Provider.of<User>(context, listen: false),
+                );
               },
               fullscreenDialog: true,
             ));

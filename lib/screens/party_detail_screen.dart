@@ -26,140 +26,137 @@ class PartyDetailScreen extends StatelessWidget {
         children: [
           SingleChildScrollView(
             clipBehavior: Clip.antiAlias,
-            child: SafeArea(
-              child: Column(
-                children: [
-                  Container(
-                    width: _media.size.width,
-                    height: _availableHeight * 0.35,
-                    child: Image.network(
-                      _party.imageUrl,
-                      fit: BoxFit.fill,
-                    ),
+            child: Column(
+              children: [
+                Container(
+                  width: _media.size.width,
+                  height: _availableHeight * 0.35,
+                  child: Image.network(
+                    _party.imageUrl,
+                    fit: BoxFit.fill,
                   ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(4, 24, 4, 0),
-                    child: Text(_party.title,
-                        style:
-                            _theme.textTheme.headline1.copyWith(fontSize: 25)),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(4, 24, 4, 0),
+                  child: Text(_party.title,
+                      style: _theme.textTheme.headline1.copyWith(fontSize: 25)),
+                ),
+                Divider(
+                  thickness: 1,
+                  endIndent: 20,
+                  color: Colors.blueGrey.shade300,
+                  indent: 20,
+                ),
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 8.0, horizontal: 22),
+                  child: Text(
+                    _party.description,
+                    style: _theme.textTheme.bodyText1,
+                    textAlign: TextAlign.justify,
                   ),
-                  Divider(
-                    thickness: 1,
-                    endIndent: 20,
-                    color: Colors.blueGrey.shade300,
-                    indent: 20,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 8.0, horizontal: 22),
-                    child: Text(
-                      _party.description,
-                      style: _theme.textTheme.bodyText1,
-                      textAlign: TextAlign.justify,
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(4, 12, 4, 0),
-                    child: Text('Party Location',
-                        style: _theme.textTheme.headline1.copyWith(
-                            fontStyle: FontStyle.italic,
-                            fontWeight: FontWeight.w400)),
-                  ),
-                  Divider(
-                    thickness: 1,
-                    endIndent: 20,
-                    color: Colors.blueGrey.shade300,
-                    indent: 20,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Image.asset(
-                          'assets/icons/location.png',
-                          height: 44,
-                        ),
-                        Text(_party.address,
-                            style: _theme.textTheme.bodyText1.copyWith(
-                                fontWeight: FontWeight.bold, fontSize: 17)),
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(4, 22, 4, 0),
-                    child: Text('Party Specifics',
-                        style: _theme.textTheme.headline1.copyWith(
-                            fontStyle: FontStyle.italic,
-                            fontWeight: FontWeight.w400)),
-                  ),
-                  Divider(
-                    thickness: 1,
-                    endIndent: 20,
-                    color: Colors.blueGrey.shade300,
-                    indent: 20,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 8.0, vertical: 18),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Image.asset(
-                          'assets/icons/time.png',
-                          height: 34,
-                        ),
-                        Text(
-                          DateFormat.Hm().format(_party.timeOfTheParty) +
-                              '      ',
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(4, 12, 4, 0),
+                  child: Text('Party Location',
+                      style: _theme.textTheme.headline1.copyWith(
+                          fontStyle: FontStyle.italic,
+                          fontWeight: FontWeight.w400)),
+                ),
+                Divider(
+                  thickness: 1,
+                  endIndent: 20,
+                  color: Colors.blueGrey.shade300,
+                  indent: 20,
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.asset(
+                        'assets/icons/location.png',
+                        height: 44,
+                      ),
+                      Text(_party.address,
                           style: _theme.textTheme.bodyText1.copyWith(
-                              fontWeight: FontWeight.bold, fontSize: 17),
-                        ),
-                        Image.asset(
-                          'assets/icons/calendar.png',
-                          height: 34,
-                        ),
-                        Text(DateFormat.yMEd().format(_party.timeOfTheParty),
-                            style: _theme.textTheme.bodyText1.copyWith(
-                                fontWeight: FontWeight.bold, fontSize: 17)),
-                      ],
-                    ),
+                              fontWeight: FontWeight.bold, fontSize: 17)),
+                    ],
                   ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 8.0, vertical: 18),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Image.asset(
-                          'assets/icons/drinks.png',
-                          height: 34,
-                        ),
-                        Text(
-                          _party.drinks.toString().replaceRange(0, 7, ''),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(4, 22, 4, 0),
+                  child: Text('Party Specifics',
+                      style: _theme.textTheme.headline1.copyWith(
+                          fontStyle: FontStyle.italic,
+                          fontWeight: FontWeight.w400)),
+                ),
+                Divider(
+                  thickness: 1,
+                  endIndent: 20,
+                  color: Colors.blueGrey.shade300,
+                  indent: 20,
+                ),
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8.0, vertical: 18),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Image.asset(
+                        'assets/icons/time.png',
+                        height: 34,
+                      ),
+                      Text(
+                        DateFormat.Hm().format(_party.timeOfTheParty) +
+                            '      ',
+                        style: _theme.textTheme.bodyText1.copyWith(
+                            fontWeight: FontWeight.bold, fontSize: 17),
+                      ),
+                      Image.asset(
+                        'assets/icons/calendar.png',
+                        height: 34,
+                      ),
+                      Text(DateFormat.yMEd().format(_party.timeOfTheParty),
                           style: _theme.textTheme.bodyText1.copyWith(
-                              fontWeight: FontWeight.bold, fontSize: 17),
-                        ),
-                        Image.asset(
-                          'assets/icons/music.png',
-                          height: 34,
-                        ),
-                        Text(_party.music.toString().replaceRange(0, 6, ''),
-                            style: _theme.textTheme.bodyText1.copyWith(
-                                fontWeight: FontWeight.bold, fontSize: 17)),
-                      ],
-                    ),
+                              fontWeight: FontWeight.bold, fontSize: 17)),
+                    ],
                   ),
-                  SizedBox(
-                    height: 100,
-                  )
-                ],
-              ),
+                ),
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8.0, vertical: 18),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Image.asset(
+                        'assets/icons/drinks.png',
+                        height: 34,
+                      ),
+                      Text(
+                        _party.drinks.toString().replaceRange(0, 7, ''),
+                        style: _theme.textTheme.bodyText1.copyWith(
+                            fontWeight: FontWeight.bold, fontSize: 17),
+                      ),
+                      Image.asset(
+                        'assets/icons/music.png',
+                        height: 34,
+                      ),
+                      Text(_party.music.toString().replaceRange(0, 6, ''),
+                          style: _theme.textTheme.bodyText1.copyWith(
+                              fontWeight: FontWeight.bold, fontSize: 17)),
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  height: 100,
+                )
+              ],
             ),
           ),
           Positioned(
-            top: _availableHeight * 0.05,
-            left: 10,
+            top: _availableHeight * 0.07,
+            left: _media.size.width * 0.04,
             child: IconButton(
               color: Colors.white,
               icon: Icon(

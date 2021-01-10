@@ -13,6 +13,14 @@ class FirebaseStorageService {
     }
   }
 
+  Future<String> storePartyImage(File image, String partyId) async {
+    try {
+      return _storeFile(file: image, path: 'partyImages/$partyId.png');
+    } catch (error) {
+      throw error;
+    }
+  }
+
   Future<String> _storeFile({
     File file,
     String path,

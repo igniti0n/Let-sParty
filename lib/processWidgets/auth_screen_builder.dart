@@ -29,7 +29,6 @@ class AuthScreenBuilder extends StatelessWidget {
                   create: (ctx) => FirebaseStorageService(),
                 ),
               ],
-              //TODO: NEED TO PROVIDE.value of a USER AS A DATA MODEL AFTER MAKING PROVIDER FOR FIRESOTE AND STORAGE AVAILABLE
               child: builderFn(ctx, userSnapshot),
             );
           } else {

@@ -24,12 +24,15 @@ class UserDeligator extends StatelessWidget {
             return Constants.displayLoadingSpinner();
           final User _currentUser = User.fromMap(snapshot.data, uid);
           print(uid);
+          print(_currentUser?.username);
+          print(_currentUser?.friends);
+
           if (snapshot.hasData) {
             print("::::DATA FROM USER FROM FIRESTORE: ${snapshot.data}");
             return Provider.value(
               value: _currentUser,
               builder: (ctx, _) {
-                return PartyDelegator();
+                return const PartyDelegator();
               },
             );
           } else {

@@ -1,7 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../models/user.dart';
-
 class FirebaseFirestoreService {
   final FirebaseFirestore instance = FirebaseFirestore.instance;
 
@@ -16,10 +14,34 @@ class FirebaseFirestoreService {
     }
   }
 
-  Future<void> storePartyInACollection(
+  Future<String> storePartyInACollection(
       Map<String, dynamic> dataToBeStored) async {
     try {
-      return await instance.collection('parties').add(dataToBeStored);
+      final _reference =
+          await instance.collection('parties').add(dataToBeStored);
+      return _reference.id;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  Future<void> updatePartyImageUrl(String partyId, String downloadUrl) async {
+    try {
+      return await instance
+          .collection('parties')
+          .doc(partyId)
+          .update({'imageUrl': downloadUrl});
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  Future<void> updatePartyLikes(String partyId, List<dynamic> value) async {
+    try {
+      return await instance
+          .collection('parties')
+          .doc(partyId)
+          .update({'likes': value});
     } catch (error) {
       throw error;
     }
@@ -27,14 +49,25 @@ class FirebaseFirestoreService {
 
   //TODO: WATCH OUT FOR FETCHING PARTY DATA, WHEN WILL PARTIES UPDATE, WHEN DO THEY NEED TO UPDATE FOR A SPECIFIC PERSON
   Stream<List<Map<String, dynamic>>> getPartyDataStream(String currentUserId) {
-    final _parties = instance.collection('parties').snapshots();
+    final _parties = instance
+        .collection('parties')
+        .orderBy('createdAt', descending: false)
+        .snapshots();
 
-    return _parties.map((QuerySnapshot querySnapshot) => querySnapshot == null
-        ? null
-        : querySnapshot.docs
-            .map((QueryDocumentSnapshot documentSnapshot) =>
-                documentSnapshot.data())
-            .toList());
+    return _parties.map((QuerySnapshot querySnapshot) {
+      if (querySnapshot == null) {
+        return null;
+      }
+      List<Map<String, dynamic>> _list =
+          querySnapshot.docs.map((QueryDocumentSnapshot documentSnapshot) {
+        Map<String, dynamic> value = documentSnapshot.data();
+
+        value.putIfAbsent('partyId', () => documentSnapshot.id);
+        return value;
+      }).toList();
+
+      return _list;
+    });
   }
 
   //TODO: provide different querying for different situations, this is an example (mby later even devide by country

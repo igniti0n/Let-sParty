@@ -13,12 +13,19 @@ class NewsFeed extends StatelessWidget {
   Widget build(BuildContext context) {
     final List<Party> _parties =
         Provider.of<List<Party>>(context, listen: false);
-    return _parties == null
-        ? Constants.displayLoadingSpinner()
+    return _parties == null || _parties.isEmpty
+        ? Container(
+            child: Center(
+              child: Text(
+                'No parties to show',
+                style: Theme.of(context).textTheme.headline1,
+              ),
+            ),
+          ) // Constants.displayLoadingSpinner()
         : ListView.builder(
             itemCount: _parties.length,
             itemBuilder: (BuildContext ctx, int index) {
-              return PartyPost(party: _parties[index]);
+              return PartyPost(party: _parties[_parties.length - 1 - index]);
             },
           );
   }

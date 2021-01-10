@@ -9,6 +9,8 @@ import '../../../constants.dart';
 import '../../../services/ImagePickerService.dart';
 
 import 'package:provider/provider.dart';
+import 'package:path_provider/path_provider.dart' as pathProvider;
+import 'package:path/path.dart' as path;
 
 class PartyCreationScreenTitle extends StatefulWidget {
   PartyCreationScreenTitle({
@@ -44,9 +46,19 @@ class _PartyCreationScreenTitleState extends State<PartyCreationScreenTitle> {
     }
   }
 
+  Future<String> _storeImageInAppDocumentsDirectory(String imagePath) async {
+    final Directory _externalDirectory =
+        await pathProvider.getExternalStorageDirectory();
+    //print('IMAGE PATH:::: $imagePath');
+    final File _partyImage =
+        new File(path.join(_externalDirectory.path, imagePath));
+    //print('STORED PATH:::: ${_partyImage.path}');
+    return _partyImage.path;
+  }
+
   @override
   void dispose() {
-    _formkey.currentState?.dispose();
+    // _formkey.currentState?.dispose();
     super.dispose();
   }
 
@@ -81,6 +93,7 @@ class _PartyCreationScreenTitleState extends State<PartyCreationScreenTitle> {
                           initialValue: widget.initialValueText,
                           validator: (text) {
                             if (text.length > 20) return 'Title too long';
+                            return null;
                           },
                           onSaved: (text) {
                             _titlePicutureData['title'] = text.trim();
@@ -156,9 +169,12 @@ class _PartyCreationScreenTitleState extends State<PartyCreationScreenTitle> {
                             await Provider.of<ImagePickerService>(context,
                                     listen: false)
                                 .pickPartyImage(ImageSource.camera);
+                        final _appDocPath =
+                            await _storeImageInAppDocumentsDirectory(
+                                _result.path);
                         if (_result != null)
                           setState(() {
-                            _titlePicutureData['imageUrl'] = _result.path;
+                            _titlePicutureData['imageUrl'] = _appDocPath;
                           });
                       },
                       clipedSide: ClipedSide.Right,

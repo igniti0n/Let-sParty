@@ -2,17 +2,18 @@ class User {
   final String username;
   final String imageUrl;
   final String uid;
-  List<dynamic> createdPartyIds = [];
-  List<dynamic> attendedPartyIds = [];
-  List<dynamic> friends = [];
+  final List<dynamic> createdPartyIds;
+  final List<dynamic> attendedPartyIds;
+  final List<dynamic> friends;
 
-  User(
-      {this.username,
-      this.imageUrl,
-      this.attendedPartyIds,
-      this.createdPartyIds,
-      this.friends,
-      this.uid});
+  User({
+    this.username,
+    this.imageUrl,
+    this.attendedPartyIds,
+    this.createdPartyIds,
+    this.friends,
+    this.uid,
+  });
 
   factory User.fromMap(Map<String, dynamic> userMap, String uid) {
     if (userMap == null) return null;

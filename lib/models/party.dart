@@ -30,7 +30,7 @@ class Party {
   @required
   final Music music;
   int numberOfPeopleComming;
-  int likes;
+  List<dynamic> likes;
   @required
   final DateTime createdAt;
   @required
@@ -41,6 +41,7 @@ class Party {
   final String partyCreatorImageUrl;
   final String partyCreatorId;
   final String slogan;
+  final String partyId;
 
   Party({
     this.timeOfTheParty,
@@ -53,11 +54,12 @@ class Party {
     this.title,
     this.partyCreatorUsername,
     this.partyCreatorImageUrl,
-    this.likes = 0,
+    this.likes = const [],
     this.createdAt,
     this.coordinates,
     this.slogan,
     this.partyCreatorId,
+    this.partyId,
   });
 
   factory Party.fromMap(Map<String, dynamic> inputMap) {
@@ -80,6 +82,7 @@ class Party {
         coordinates: LatLng.fromMap(inputMap['coordinates']),
         partyCreatorId: inputMap['partyCreatorId'],
         slogan: inputMap['slogan'],
+        partyId: inputMap['partyId'],
       );
     }
   }

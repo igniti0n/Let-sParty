@@ -1,14 +1,21 @@
+import 'dart:io';
+
+import 'package:LetsParty/models/lat_long.dart';
+import 'package:LetsParty/models/user.dart';
 import 'package:flutter/material.dart';
 
 import '../party_creation_screens/party_creation_screen_title.dart';
 import '../party_creation_screens/party_creation_screen_details.dart';
 import '../party_creation_screens/party_creation_screen_specifics.dart';
-import '../../../constants.dart';
 import '../../../models/party.dart';
-import '../../../widgets/purple_button.dart';
+import '../../../services/FirebaseFirestoreService.dart';
+import '../../../services/FirebaseStorageService.dart';
+
+import 'package:provider/provider.dart';
 
 class PartyCreationScreensManager extends StatefulWidget {
-  PartyCreationScreensManager({Key key}) : super(key: key);
+  final userData;
+  PartyCreationScreensManager({Key key, this.userData}) : super(key: key);
 
   @override
   _PartyCreationScreensManagerState createState() =>
@@ -32,18 +39,22 @@ class _PartyCreationScreensManagerState
     'imageUrl': '',
     'music': Music.House,
     'description': '',
+    'numberOfPeopleComming': 1,
     'title': '',
     'partyCreatorUsername': '',
     'partyCreatorImageUrl': '',
-    'likes': '',
+    'likes': [],
     'createdAt': '',
-    'coordinates': null,
+    'coordinates': {
+      'latitude': null,
+      'longitude': null,
+    },
     'partyCreatorId': '',
     'slogan': '',
   };
 
-  DateTime _datePicked = null;
-  TimeOfDay _timePicked = null;
+  DateTime _datePicked;
+  TimeOfDay _timePicked;
 
   void _changeScreen(CreationScreen screenToChangeTo) {
     setState(() {
@@ -51,8 +62,40 @@ class _PartyCreationScreensManagerState
     });
   }
 
-  Future<bool> _tryToAddParty() async {
-    return false;
+  Future<void> _tryToAddParty() async {
+    final FirebaseFirestoreService _firestoreService =
+        Provider.of<FirebaseFirestoreService>(context, listen: false);
+
+    _newParty['timeOfTheParty'] = _datePicked
+        .add(Duration(
+          hours: _timePicked.hour,
+          minutes: _timePicked.minute,
+        ))
+        .toIso8601String();
+
+    _newParty['partyCreatorUsername'] = widget.userData.username;
+    _newParty['partyCreatorImageUrl'] = widget.userData.imageUrl;
+    _newParty['partyCreatorId'] = widget.userData.uid;
+    _newParty['drinks'] =
+        Drinks.values.indexWhere((element) => element == _newParty['drinks']);
+    _newParty['music'] =
+        Music.values.indexWhere((element) => element == _newParty['music']);
+
+    _newParty['createdAt'] = DateTime.now().toIso8601String();
+
+    try {
+      final _partyId =
+          await _firestoreService.storePartyInACollection(_newParty);
+      final _partyImageDownloadUrl =
+          await Provider.of<FirebaseStorageService>(context, listen: false)
+              .storePartyImage(File(_newParty['imageUrl']), _partyId);
+      await _firestoreService.updatePartyImageUrl(
+          _partyId, _partyImageDownloadUrl);
+      // File(_newParty['imageUrl']).delete();
+      Navigator.of(context).pop();
+    } catch (error) {
+      print(error.toString());
+    }
   }
 
   void _saveSpecifics(Map<String, dynamic> specificsData) {
@@ -67,11 +110,6 @@ class _PartyCreationScreensManagerState
 
     _newParty['drinks'] = specificsData['drinks'];
     _newParty['music'] = specificsData['music'];
-  }
-
-  void _saveDescription(String slog, String desc) {
-    _newParty['slogan'] = slog;
-    _newParty['description'] = desc;
   }
 
   Widget _buildCurrentScreen() {
@@ -114,14 +152,14 @@ class _PartyCreationScreensManagerState
       return PartyCreationScreenDetails(
         descriptionInitialValue: _newParty['description'],
         sloganInitialValue: _newParty['slogan'],
-        onNext: (slogan, description) {
-          _saveDescription(slogan, description);
-          _tryToAddParty().then((isSuccess) {
-            if (isSuccess) Navigator.of(context).pop();
-          });
+        onNext: (slogan, description) async {
+          _newParty['slogan'] = slogan;
+          _newParty['description'] = description;
+          await _tryToAddParty();
         },
         onPrevious: (slogan, description) {
-          _saveDescription(slogan, description);
+          _newParty['slogan'] = slogan;
+          _newParty['description'] = description;
           _changeScreen(
               CreationScreen.values.elementAt(_currentScreen.index - 1));
         },

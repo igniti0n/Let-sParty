@@ -44,8 +44,11 @@ class _PartyCreationScreenSpecificsState
     'drinks': Drinks.BringYourOwnBooze,
     'music': Music.Techno,
     'date': '',
-    'time': null as TimeOfDay,
-    'coordinates': null as LatLng, //LatLng(latitude: 20, longitude: 20),
+    'time': null,
+    'coordinates': {
+      'latitude': null,
+      'longitude': null,
+    },
   };
 
   int _musicIndex = 1;
@@ -66,25 +69,8 @@ class _PartyCreationScreenSpecificsState
   void _chooseFromMap() async {
     Location location = new Location();
 
-    // bool _serviceEnabled;
-    // PermissionStatus _permissionGranted;
     LocationData _locationData;
 
-    // _serviceEnabled = await location.serviceEnabled();
-    // if (!_serviceEnabled) {
-    //   _serviceEnabled = await location.requestService();
-    //   if (!_serviceEnabled) {
-    //     return;
-    //   }
-    // }
-
-    // _permissionGranted = await location.hasPermission();
-    // if (_permissionGranted == PermissionStatus.denied) {
-    //   _permissionGranted = await location.requestPermission();
-    //   if (_permissionGranted != PermissionStatus.granted) {
-    //     return;
-    //   }
-    // }
     _locationData = await location.getLocation();
 
     print(_locationData);
@@ -94,21 +80,23 @@ class _PartyCreationScreenSpecificsState
       fullscreenDialog: true,
       builder: (ctx) => MapScreen(
         isSelecting: true,
-        initialLocation: _specificsData['coordinates'] == null
+        initialLocation: _specificsData['coordinates']['latitude'] == null
             ? maps.LatLng(
                 _locationData.latitude,
                 _locationData.longitude,
               )
             : maps.LatLng(
-                _specificsData['coordinates'].latitude,
-                _specificsData['coordinates'].longitude,
+                _specificsData['coordinates']['latitude'],
+                _specificsData['coordinates']['longitude'],
               ),
       ),
     ));
 
     if (_result == null) return;
-    _specificsData['coordinates'] =
-        LatLng(latitude: _result.latitude, longitude: _result.longitude);
+    _specificsData['coordinates'] = {
+      'latitude': _result.latitude,
+      'longitude': _result.longitude
+    };
 
     print('${_result.latitude} :  ${_result.longitude}');
 
@@ -361,15 +349,6 @@ class _PartyCreationScreenSpecificsState
                   ),
                 ),
               ),
-              // Padding(
-              //   padding:
-              //       const EdgeInsets.symmetric(vertical: 20.0, horizontal: 28),
-              //   child: Text(
-              //     Constants.textPartyCreationSpecificsBlock,
-              //     style: _theme.textTheme.bodyText1
-              //         .copyWith(color: Constants.kHelperTextColor, height: 1.5),
-              //   ),
-              // ),
               SizedBox(
                 height: 160,
               ),
@@ -473,10 +452,12 @@ class SpecificsButonPicker extends StatelessWidget {
               // SizedBox(
               //   height: _media.size.height * 0.04,
               // ),
-              Text(
-                value,
-                style: _theme.textTheme.headline2,
-                overflow: TextOverflow.clip,
+              Expanded(
+                child: Text(
+                  value,
+                  style: _theme.textTheme.headline2,
+                  overflow: TextOverflow.clip,
+                ),
               ),
               Divider(
                 color: Colors.grey[600],

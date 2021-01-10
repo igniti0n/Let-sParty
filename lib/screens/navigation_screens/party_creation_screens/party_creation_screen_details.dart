@@ -27,7 +27,8 @@ class _PartyCreationScreenDetailsState
     extends State<PartyCreationScreenDetails> {
   final GlobalKey<FormState> _formkey2 = new GlobalKey<FormState>();
 
-  String _slogan = '', _description = '';
+  String _slogan = '';
+  String _description = '';
 
   void _saveData() {
     if (_formkey2.currentState.validate()) {
@@ -47,12 +48,12 @@ class _PartyCreationScreenDetailsState
       children: [
         ...Constants.buildBackground(),
         SingleChildScrollView(
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.fromLTRB(10.0, 30, 20, 0),
-                child: Form(
-                  key: _formkey2,
+          child: Form(
+            key: _formkey2,
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(10.0, 30, 20, 0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -78,111 +79,111 @@ class _PartyCreationScreenDetailsState
                     ],
                   ),
                 ),
-              ),
-              Divider(
-                height: 2,
-                thickness: 1,
-                endIndent: 20,
-                color: Colors.blueGrey.shade300,
-                indent: 20,
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
-                child: Row(
-                  children: [
-                    Text(
-                      "\"",
-                      style: _theme.textTheme.headline1,
-                    ),
-                    Expanded(
-                      child: TextFormField(
-                        onSaved: (newSlogan) {
-                          _slogan = newSlogan.trim();
+                Divider(
+                  height: 2,
+                  thickness: 1,
+                  endIndent: 20,
+                  color: Colors.blueGrey.shade300,
+                  indent: 20,
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
+                  child: Row(
+                    children: [
+                      Text(
+                        "\"",
+                        style: _theme.textTheme.headline1,
+                      ),
+                      Expanded(
+                        child: TextFormField(
+                          initialValue: widget.sloganInitialValue,
+                          validator: (slogan) {
+                            if (slogan.length > 44) return '';
+                            return null;
+                          },
+                          onSaved: (newSlogan) {
+                            _slogan = newSlogan.trim();
 
-                          print(' THIS IS TYPED IN: '); //$newSlogan');
-                        },
-                        // validator: (slogan) {
-                        //   if (slogan.length > 44) return '';
-                        //   return;
-                        // },
-                        initialValue: widget.sloganInitialValue,
-                        textAlign: TextAlign.center,
-                        textInputAction: TextInputAction.done,
-                        maxLines: 1,
-                        inputFormatters: [
-                          new LengthLimitingTextInputFormatter(
-                              44), // for mobile
-                        ],
-                        style: _theme.textTheme.bodyText1.copyWith(
-                            fontWeight: FontWeight.w500, fontSize: 20),
-                        decoration: InputDecoration(
-                          hintText: 'Slogan...',
-                          border: InputBorder.none,
-                          counter: null,
-                          counterText: null,
-                          disabledBorder: InputBorder.none,
-                          enabledBorder: InputBorder.none,
-                          errorBorder: InputBorder.none,
-                          focusedBorder: InputBorder.none,
-                          focusedErrorBorder: InputBorder.none,
+                            print(' THIS IS TYPED IN: '); //$newSlogan');
+                          },
+                          textAlign: TextAlign.center,
+                          textInputAction: TextInputAction.done,
+                          maxLines: 1,
+                          inputFormatters: [
+                            new LengthLimitingTextInputFormatter(
+                                44), // for mobile
+                          ],
+                          style: _theme.textTheme.bodyText1.copyWith(
+                              fontWeight: FontWeight.w500, fontSize: 20),
+                          decoration: InputDecoration(
+                            hintText: 'Slogan...',
+                            border: InputBorder.none,
+                            disabledBorder: InputBorder.none,
+                            enabledBorder: InputBorder.none,
+                            errorBorder: InputBorder.none,
+                            focusedBorder: InputBorder.none,
+                            focusedErrorBorder: InputBorder.none,
+                          ),
                         ),
                       ),
-                    ),
-                    Text(
-                      "\"",
-                      style: _theme.textTheme.headline1,
-                    ),
-                  ],
+                      Text(
+                        "\"",
+                        style: _theme.textTheme.headline1,
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
-                child: Text(
-                  'Set a catchy slogan for your party! Slogan can have a maximum of 44 characters, keep it short and fun!',
-                  style: _theme.textTheme.bodyText1
-                      .copyWith(color: Constants.kHelperTextColor, height: 1.5),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+                  child: Text(
+                    'Set a catchy slogan for your party! Slogan can have a maximum of 44 characters, keep it short and fun!',
+                    style: _theme.textTheme.bodyText1.copyWith(
+                        color: Constants.kHelperTextColor, height: 1.5),
+                  ),
                 ),
-              ),
-              Container(
-                padding: EdgeInsets.all(8),
-                height: _media.size.height * 0.35,
-                color: Color.fromRGBO(30, 30, 30, 0.05),
-                child: SingleChildScrollView(
-                  child: TextFormField(
-                    onSaved: (newDescription) {
-                      _description = newDescription;
-                      _description = 'aaaaaaaaaaaaaa';
-                    },
-                    initialValue: widget.descriptionInitialValue,
-                    // keyboardType: TextInputType.text,
-                    maxLines: 20,
-                    textInputAction: TextInputAction.newline,
-                    decoration: InputDecoration(
-                      hintText: 'Description....',
-                      border: InputBorder.none,
-                      disabledBorder: InputBorder.none,
-                      enabledBorder: InputBorder.none,
-                      errorBorder: InputBorder.none,
-                      focusedBorder: InputBorder.none,
-                      focusedErrorBorder: InputBorder.none,
-                      contentPadding: EdgeInsets.all(2),
+                Container(
+                  padding: EdgeInsets.all(8),
+                  height: _media.size.height * 0.35,
+                  color: Color.fromRGBO(30, 30, 30, 0.05),
+                  child: SingleChildScrollView(
+                    child: TextFormField(
+                      initialValue: widget.descriptionInitialValue,
+                      onSaved: (newDescription) {
+                        _description = newDescription;
+                      },
+                      validator: (text) {
+                        return null;
+                      },
+                      // keyboardType: TextInputType.text,
+                      maxLines: 20,
+                      textInputAction: TextInputAction.newline,
+                      decoration: InputDecoration(
+                        hintText: 'Description....',
+                        border: InputBorder.none,
+                        disabledBorder: InputBorder.none,
+                        enabledBorder: InputBorder.none,
+                        errorBorder: InputBorder.none,
+                        focusedBorder: InputBorder.none,
+                        focusedErrorBorder: InputBorder.none,
+                        contentPadding: EdgeInsets.all(2),
+                      ),
                     ),
                   ),
                 ),
-              ),
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 20.0, horizontal: 20),
-                child: Text(
-                  Constants.textPartyCreationDescription,
-                  style: _theme.textTheme.bodyText1
-                      .copyWith(color: Constants.kHelperTextColor, height: 1.5),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 20.0, horizontal: 20),
+                  child: Text(
+                    Constants.textPartyCreationDescription,
+                    style: _theme.textTheme.bodyText1.copyWith(
+                        color: Constants.kHelperTextColor, height: 1.5),
+                  ),
                 ),
-              ),
-              SizedBox(
-                height: 150,
-              ),
-            ],
+                SizedBox(
+                  height: 150,
+                ),
+              ],
+            ),
           ),
         ),
         NavigationPartyCreationWidget(
