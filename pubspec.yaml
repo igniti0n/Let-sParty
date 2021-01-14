@@ -82,8 +82,8 @@ flutter:
     - assets/icons/beer.png
     - assets/icons/toast.png
     - assets/icons/partyFriends.png
-
-
+    - assets/icons/checkmark.png
+    - assets/icons/removeUser-filled.png
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

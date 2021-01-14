@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../screens/navigation_screens/user_adding_screen.dart';
 import '../constants.dart';
 import '../models/user.dart';
 import '../screens/navigation_screens/user_wall.dart';
@@ -20,6 +21,7 @@ class WallManager extends StatelessWidget {
 
     return Scaffold(
       appBar: MyAppBar(),
+      resizeToAvoidBottomPadding: false,
       body: PartyNavigationBar(
         screens: [
           NewsFeed(),
@@ -28,7 +30,7 @@ class WallManager extends StatelessWidget {
             visitingUser: _user,
             logedInUser: _user,
           ),
-          NewsFeed(),
+          UserAddingScreen(),
         ],
         onIndexChanged: (currentIndex) {
           if (currentIndex == 1) {

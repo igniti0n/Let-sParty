@@ -10,6 +10,8 @@ class Constants {
   static const kHelperTextColor = Color.fromRGBO(128, 124, 124, 1);
   static const kPurpleButtonTextColor = Color.fromRGBO(68, 42, 42, 1);
 
+  static const String textUserAddingScreen =
+      "Type in your friends party ID to add them as a Party Friend !";
   static const String textPartyCreationTitle =
       "Set a short cool/fun name for your party ! Name can be anything, it does not need to explain the party, you can add description later !";
   static const String textPartyCreationImage =

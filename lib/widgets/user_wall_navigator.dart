@@ -300,9 +300,12 @@ class _AddFriendButtonState extends State<AddFriendButton> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  widget.friendshipStatus == FriendshipStatus.NotFriends
-                      ? Image.asset('assets/icons/addUser-filled.png')
-                      : Icon(Icons.check),
+                  Image.asset(
+                      widget.friendshipStatus == FriendshipStatus.NotFriends
+                          ? 'assets/icons/addUser-filled.png'
+                          : widget.friendshipStatus == FriendshipStatus.Pending
+                              ? 'assets/icons/checkmark.png'
+                              : 'assets/icons/removeUser-filled.png'),
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 4.0),
                     child: Text(
@@ -314,7 +317,10 @@ class _AddFriendButtonState extends State<AddFriendButton> {
                       textAlign: TextAlign.center,
                       style: Theme.of(context).textTheme.headline1.copyWith(
                             fontSize: 16,
-                            color: Colors.white,
+                            color: widget.friendshipStatus ==
+                                    FriendshipStatus.NotFriends
+                                ? Colors.white
+                                : Colors.black,
                           ),
                     ),
                   ),
