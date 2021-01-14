@@ -14,7 +14,7 @@ import '../../../services/FirebaseStorageService.dart';
 import 'package:provider/provider.dart';
 
 class PartyCreationScreensManager extends StatefulWidget {
-  final userData;
+  final User userData;
   PartyCreationScreensManager({Key key, this.userData}) : super(key: key);
 
   @override
@@ -86,12 +86,18 @@ class _PartyCreationScreensManagerState
     try {
       final _partyId =
           await _firestoreService.storePartyInACollection(_newParty);
+
+      widget.userData.createdPartyIds.add(_partyId);
+
       final _partyImageDownloadUrl =
           await Provider.of<FirebaseStorageService>(context, listen: false)
               .storePartyImage(File(_newParty['imageUrl']), _partyId);
       await _firestoreService.updatePartyImageUrl(
           _partyId, _partyImageDownloadUrl);
-      // File(_newParty['imageUrl']).delete();
+
+      await _firestoreService.updateUserCreatedParties(
+          widget.userData.createdPartyIds, widget.userData.uid);
+      File(_newParty['imageUrl']).delete();
       Navigator.of(context).pop();
     } catch (error) {
       print(error.toString());

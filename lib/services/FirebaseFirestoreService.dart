@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import '../models/user.dart';
+
 class FirebaseFirestoreService {
   final FirebaseFirestore instance = FirebaseFirestore.instance;
 
@@ -9,6 +11,44 @@ class FirebaseFirestoreService {
   ) async {
     try {
       return await instance.collection('users').doc(uid).set(dataToBeStored);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  Future<void> updateUserCreatedParties(
+    List<dynamic> createdPartyIds,
+    String uid,
+  ) async {
+    try {
+      return await instance
+          .collection('users')
+          .doc(uid)
+          .update({'createdPartyIds': createdPartyIds});
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  Future<void> updateUserFriendRequest(
+      String userTobeSent, List<dynamic> value) async {
+    try {
+      return await instance
+          .collection('users')
+          .doc(userTobeSent)
+          .update({'friendRequests': value});
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  Future<void> updateUserFriends(List<dynamic> createdPartyIds,
+      String userTobeSent, List<dynamic> value, String sendingUserId) async {
+    try {
+      return await instance
+          .collection('users')
+          .doc(userTobeSent)
+          .update({'friends': value});
     } catch (error) {
       throw error;
     }
@@ -70,13 +110,47 @@ class FirebaseFirestoreService {
     });
   }
 
+  Future<User> getUserData(String userId) async {
+    final _data = await instance.collection('users').doc(userId).get();
+    return User.fromMap(_data.data(), _data.id);
+  }
+
   //TODO: provide different querying for different situations, this is an example (mby later even devide by country
   //in seperate collections or continents for faster when scaling)
-  Stream<List<Map<String, dynamic>>> getPartyDataMoreThanFourPeopleStream(
-      String currentUserId) {
+  Stream<List<Map<String, dynamic>>> getPartyDataMoreThanFourPeopleStream() {
     final _parties = instance
         .collection('parties')
         .where('numberOfPeopleComming', isGreaterThan: 4)
+        .snapshots();
+
+    return _parties.map((QuerySnapshot querySnapshot) => querySnapshot == null
+        ? null
+        : querySnapshot.docs
+            .map((QueryDocumentSnapshot documentSnapshot) =>
+                documentSnapshot.data())
+            .toList());
+  }
+
+  Stream<List<Map<String, dynamic>>> getPartyDataForCreatedByUser(
+      String userId) {
+    final _parties = instance
+        .collection('parties')
+        .where('partyCreatorId', isEqualTo: userId)
+        .snapshots();
+
+    return _parties.map((QuerySnapshot querySnapshot) => querySnapshot == null
+        ? null
+        : querySnapshot.docs
+            .map((QueryDocumentSnapshot documentSnapshot) =>
+                documentSnapshot.data())
+            .toList());
+  }
+
+  Stream<List<Map<String, dynamic>>> getPartyDataForAttendedByUser(
+      List<dynamic> partyIds) {
+    final _parties = instance
+        .collection('parties')
+        .where(FieldPath.documentId, whereIn: partyIds)
         .snapshots();
 
     return _parties.map((QuerySnapshot querySnapshot) => querySnapshot == null

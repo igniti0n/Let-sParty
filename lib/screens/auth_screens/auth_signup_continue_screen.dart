@@ -30,6 +30,7 @@ class _SignupScreenState extends State<SignupScreen> {
     'attendedPartyIds': [],
     'createdPartyIds': [],
     'friends': [],
+    'friendRequests': [],
   };
 
   void _pickImage(BuildContext ctx, ImageSource source) async {

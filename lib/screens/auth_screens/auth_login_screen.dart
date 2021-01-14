@@ -1,13 +1,13 @@
+import 'package:LetsParty/screens/auth_screens/auth_signup_continue_screen.dart';
 import 'package:flutter/material.dart';
 
 import '../../constants.dart';
 import '../../widgets/auth_button.dart';
 import '../../widgets/auth_white_input_field.dart';
 import '../../services/FirebaseAuthService.dart';
-import '../../screens/auth_screens/auth_signup_continue_screen.dart';
 
 import 'package:email_validator/email_validator.dart';
-import 'package:firebase_auth/firebase_auth.dart' as auth show User;
+
 import 'package:provider/provider.dart';
 
 class AuthLoginScreen extends StatefulWidget {

@@ -1,3 +1,9 @@
+enum FriendshipStatus {
+  NotFriends,
+  Friends,
+  Pending,
+}
+
 class User {
   final String username;
   final String imageUrl;
@@ -5,6 +11,7 @@ class User {
   final List<dynamic> createdPartyIds;
   final List<dynamic> attendedPartyIds;
   final List<dynamic> friends;
+  final List<dynamic> friendRequests;
 
   User({
     this.username,
@@ -13,6 +20,7 @@ class User {
     this.createdPartyIds,
     this.friends,
     this.uid,
+    this.friendRequests,
   });
 
   factory User.fromMap(Map<String, dynamic> userMap, String uid) {
@@ -25,6 +33,7 @@ class User {
       attendedPartyIds: userMap['attendedPartyIds'],
       friends: userMap['friends'],
       uid: uid,
+      friendRequests: userMap['friendRequests'],
     );
   }
 
@@ -41,6 +50,7 @@ class User {
       'attendedPartyIds': user.attendedPartyIds.toList() as List<String>,
       'createdPartyIds': user.createdPartyIds.toList() as List<String>,
       'friends': user.friends.toList() as List<String>,
+      'friendRequests': user.friendRequests.toList() as List<String>,
     };
   }
 }

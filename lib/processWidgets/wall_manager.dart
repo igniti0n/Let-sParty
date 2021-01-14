@@ -14,13 +14,20 @@ class WallManager extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final User _user = Provider.of<User>(context, listen: false);
+
+    print("CREATED PARTIES: ${_user.createdPartyIds},  ${_user.username}");
+
     return Scaffold(
       appBar: MyAppBar(),
       body: PartyNavigationBar(
         screens: [
           NewsFeed(),
           Container(),
-          UserWall(),
+          UserWall(
+            visitingUser: _user,
+            logedInUser: _user,
+          ),
           NewsFeed(),
         ],
         onIndexChanged: (currentIndex) {
@@ -28,7 +35,7 @@ class WallManager extends StatelessWidget {
             Navigator.of(context).push(new MaterialPageRoute(
               builder: (ctx) {
                 return PartyCreationScreensManager(
-                  userData: Provider.of<User>(context, listen: false),
+                  userData: _user,
                 );
               },
               fullscreenDialog: true,
@@ -37,7 +44,6 @@ class WallManager extends StatelessWidget {
           }
           print('index: $currentIndex');
           return false;
-          // return true;
         },
       ),
     );
