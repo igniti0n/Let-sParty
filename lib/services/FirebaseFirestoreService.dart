@@ -16,6 +16,14 @@ class FirebaseFirestoreService {
     }
   }
 
+  Future<List<User>> getAllUsersFromList(List<dynamic> userIds) async {
+    final query = await instance
+        .collection('users')
+        .where(FieldPath.documentId, whereIn: userIds)
+        .get();
+    return query.docs.map((el) => User.fromMap(el.data(), el.id)).toList();
+  }
+
   Future<void> updateUserCreatedParties(
     List<dynamic> createdPartyIds,
     String uid,

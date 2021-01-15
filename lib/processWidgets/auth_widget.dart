@@ -17,7 +17,7 @@ class AuthenticationWidget extends StatelessWidget {
     print('::::BUILDING AUTHENTICATION WIDGET::::');
     if (snapshot.connectionState == ConnectionState.active) {
       // if (snapshot.data != null)
-      //   Provider.of<FirebaseAuthService>(context, listen: false).logOut();
+      //
 
       return snapshot.hasData
           ? UserDeligator(uid: snapshot.data.uid)

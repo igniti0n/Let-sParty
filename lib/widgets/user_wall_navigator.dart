@@ -75,6 +75,8 @@ class _UserWallNavigatorState extends State<UserWallNavigator> {
                     children: [
                       CircleAvatar(
                         radius: widget.availableSize.height / 4.5,
+                        backgroundImage:
+                            NetworkImage(widget.userToBeDisplayed.imageUrl),
                       ),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
@@ -288,6 +290,10 @@ class _AddFriendButtonState extends State<AddFriendButton> {
       child: Material(
         color: Colors.transparent,
         child: InkWell(
+          splashFactory: InkSplash.splashFactory,
+          splashColor: widget.friendshipStatus != FriendshipStatus.NotFriends
+              ? Colors.red[300]
+              : null,
           onTap: () {
             widget.onTap();
           },
