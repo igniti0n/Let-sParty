@@ -17,19 +17,50 @@ class UserAddingScreen extends StatefulWidget {
 }
 
 class _UserAddingScreenState extends State<UserAddingScreen> {
+  final GlobalKey<State> _futureKey = new GlobalKey<State>();
+  final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
+  String _requestId = "";
+
   @override
   Widget build(BuildContext context) {
-    final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
     final ThemeData _theme = Theme.of(context);
     final MediaQueryData _mediaData = MediaQuery.of(context);
     final User _currentUser = Provider.of<User>(context, listen: false);
-    List<User> _requestsUsers;
 
-    void _tryToAddUser() {
+    void _tryToAddUser() async {
       if (_formKey.currentState.validate()) {
         print(_formKey.currentContext.widget.toStringDeep());
 
         _formKey.currentState.save();
+
+        if (_currentUser.uid == _requestId) {
+          print("NEMOŽEŠ SAM SEBI SLAT ZAHTIJEV");
+          return;
+        }
+
+        if (_currentUser.friendRequests.contains(_requestId)) {
+          print("TAJ KORISNIK JE VEĆ POSLAO ZAHTJEV VAMA");
+          return;
+        }
+
+        final User _userToSendRequestTo =
+            await Provider.of<FirebaseFirestoreService>(context, listen: false)
+                .getUserData(_requestId);
+
+        if (_userToSendRequestTo == null) {
+          print("SEARCH ZA USERA JE NULL");
+          return;
+        }
+
+        if (_userToSendRequestTo.friendRequests.contains(_currentUser.uid)) {
+          print("VEĆ POSLAN ZAHTIJEV");
+          return;
+        }
+
+        _userToSendRequestTo.friendRequests.add(_currentUser.uid);
+        await Provider.of<FirebaseFirestoreService>(context, listen: false)
+            .updateUserFriendRequest(
+                _userToSendRequestTo.uid, _userToSendRequestTo.friendRequests);
       }
     }
 
@@ -52,9 +83,16 @@ class _UserAddingScreenState extends State<UserAddingScreen> {
                 ),
               ),
               Form(
+                key: _formKey,
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 30.0),
                   child: TextFormField(
+                    onSaved: (id) {
+                      _requestId = id;
+                    },
+                    validator: (text) {
+                      return null;
+                    },
                     maxLines: 1,
                     toolbarOptions: ToolbarOptions(
                       copy: true,
@@ -85,16 +123,26 @@ class _UserAddingScreenState extends State<UserAddingScreen> {
               SendRequestButton(
                 mediaData: _mediaData,
                 theme: _theme,
+                onTap: _tryToAddUser,
               ),
               Padding(
                 padding: EdgeInsets.fromLTRB(20, 10, 20, 20),
-                child: Text(
-                  "Your Party ID:\n#jd23h2134",
-                  style: _theme.textTheme.headline1.copyWith(
-                    color: Constants.kHelperTextColor,
-                    fontSize: 17,
+                child: Column(children: [
+                  Text(
+                    "Your Party ID:",
+                    style: _theme.textTheme.headline1.copyWith(
+                      color: Constants.kHelperTextColor,
+                      fontSize: 17,
+                    ),
                   ),
-                ),
+                  SelectableText(
+                    "${_currentUser.uid}",
+                    style: _theme.textTheme.headline1.copyWith(
+                      color: Constants.kHelperTextColor,
+                      fontSize: 17,
+                    ),
+                  ),
+                ]),
               ),
               Text(
                 "Your Friend Requests",
@@ -110,36 +158,11 @@ class _UserAddingScreenState extends State<UserAddingScreen> {
                 color: Colors.blueGrey.shade300,
                 indent: _mediaData.size.width * 0.1,
               ),
-              Container(
-                height: _mediaData.size.height * 0.2,
-                child: FutureBuilder(
-                    future: Provider.of<FirebaseFirestoreService>(context,
-                            listen: false)
-                        .getAllUsersFromList(_currentUser.friendRequests),
-                    initialData: [],
-                    builder: (cntx, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting)
-                        return Constants.displayLoadingSpinner();
-
-                      final List<User> _data = snapshot.data as List<User>;
-
-                      return ListView.builder(
-                        itemCount: _currentUser.friendRequests.length,
-                        itemBuilder: (ctx, index) {
-                          return RequestTile(
-                            currentUser: _currentUser,
-                            theme: _theme,
-                            mediaData: _mediaData,
-                            sendingUser: _data.elementAt(index),
-                            shouldAddDivider:
-                                index == _currentUser.friendRequests.length - 1
-                                    ? false
-                                    : true,
-                          );
-                        },
-                      );
-                    }),
-              ),
+              RequestsListWidget(
+                  mediaData: _mediaData,
+                  futureKey: _futureKey,
+                  currentUser: _currentUser,
+                  theme: _theme),
               Divider(
                 height: 2,
                 thickness: 1.5,
@@ -169,6 +192,72 @@ class _UserAddingScreenState extends State<UserAddingScreen> {
   }
 }
 
+class RequestsListWidget extends StatefulWidget {
+  const RequestsListWidget({
+    Key key,
+    @required MediaQueryData mediaData,
+    @required GlobalKey<State<StatefulWidget>> futureKey,
+    @required User currentUser,
+    @required ThemeData theme,
+  })  : _mediaData = mediaData,
+        _futureKey = futureKey,
+        _currentUser = currentUser,
+        _theme = theme,
+        super(key: key);
+
+  final MediaQueryData _mediaData;
+  final GlobalKey<State<StatefulWidget>> _futureKey;
+  final User _currentUser;
+  final ThemeData _theme;
+
+  @override
+  _RequestsListWidgetState createState() => _RequestsListWidgetState();
+}
+
+class _RequestsListWidgetState extends State<RequestsListWidget> {
+  void _onRequestRemoved() {
+    setState(() {});
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: widget._mediaData.size.height * 0.2,
+      child: FutureBuilder(
+          key: widget._futureKey,
+          future: Provider.of<FirebaseFirestoreService>(context, listen: false)
+              .getAllUsersFromList(widget._currentUser.friendRequests),
+          initialData: [],
+          builder: (cntx, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Constants.displayLoadingSpinner();
+            } else {
+              final List<User> _data = snapshot.data as List<User>;
+              print("Users request: $_data");
+              print("CURRENT friendReq: ${widget._currentUser.friendRequests}");
+
+              return ListView.builder(
+                itemCount: widget._currentUser.friendRequests.length,
+                itemBuilder: (ctx, index) {
+                  return RequestTile(
+                    onRemovingRequest: _onRequestRemoved,
+                    currentUser: widget._currentUser,
+                    theme: widget._theme,
+                    mediaData: widget._mediaData,
+                    sendingUser: _data.elementAt(index),
+                    shouldAddDivider:
+                        index == widget._currentUser.friendRequests.length - 1
+                            ? false
+                            : true,
+                  );
+                },
+              );
+            }
+          }),
+    );
+  }
+}
+
 class RequestTile extends StatelessWidget {
   RequestTile({
     Key key,
@@ -177,12 +266,14 @@ class RequestTile extends StatelessWidget {
     @required this.shouldAddDivider,
     @required this.theme,
     @required this.currentUser,
+    this.onRemovingRequest,
   }) : super(key: key);
   final User sendingUser;
   final MediaQueryData mediaData;
   final bool shouldAddDivider;
   final ThemeData theme;
   final User currentUser;
+  final Function() onRemovingRequest;
 
   final TapGestureRecognizer _recognizer = TapGestureRecognizer();
 
@@ -231,11 +322,43 @@ class RequestTile extends StatelessWidget {
                   children: [
                     RequestTileButton(
                       mediaData: mediaData,
+                      onTap: () async {
+                        try {
+                          currentUser.friends.add(sendingUser.uid);
+                          sendingUser.friends.add(currentUser.uid);
+                          currentUser.friendRequests.remove(sendingUser.uid);
+                          await Provider.of<FirebaseFirestoreService>(context,
+                                  listen: false)
+                              .updateUserFriends(
+                                  userTobeSent: currentUser.uid,
+                                  value: currentUser.friends);
+                          await Provider.of<FirebaseFirestoreService>(context,
+                                  listen: false)
+                              .updateUserFriends(
+                                  userTobeSent: sendingUser.uid,
+                                  value: sendingUser.friends);
+                          await Provider.of<FirebaseFirestoreService>(context,
+                                  listen: false)
+                              .updateUserFriendRequest(
+                                  currentUser.uid, currentUser.friendRequests);
+                          onRemovingRequest();
+                        } catch (error) {
+                          print("ERRO OCCURED: ${error.toString()}");
+                        }
+                      },
                       theme: theme,
                       isAdding: true,
                     ),
                     RequestTileButton(
                       mediaData: mediaData,
+                      onTap: () async {
+                        currentUser.friendRequests.remove(sendingUser.uid);
+                        await Provider.of<FirebaseFirestoreService>(context,
+                                listen: false)
+                            .updateUserFriendRequest(
+                                currentUser.uid, currentUser.friendRequests);
+                        onRemovingRequest();
+                      },
                       theme: theme,
                       isAdding: false,
                     ),
@@ -264,11 +387,13 @@ class RequestTileButton extends StatelessWidget {
     @required this.mediaData,
     @required this.theme,
     @required this.isAdding,
+    @required this.onTap,
   }) : super(key: key);
 
   final MediaQueryData mediaData;
   final ThemeData theme;
   final bool isAdding;
+  final Function() onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -289,7 +414,7 @@ class RequestTileButton extends StatelessWidget {
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          onTap: () {},
+          onTap: onTap,
           child: Padding(
             padding: const EdgeInsets.all(2.0),
             child: Image.asset(isAdding
@@ -307,10 +432,12 @@ class SendRequestButton extends StatelessWidget {
     Key key,
     @required this.mediaData,
     @required this.theme,
+    @required this.onTap,
   }) : super(key: key);
 
   final MediaQueryData mediaData;
   final ThemeData theme;
+  final Function() onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -329,7 +456,7 @@ class SendRequestButton extends StatelessWidget {
         child: Material(
           color: Colors.transparent,
           child: InkWell(
-            onTap: () {},
+            onTap: onTap,
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Text(

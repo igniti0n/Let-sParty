@@ -26,6 +26,8 @@ class UserDeligator extends StatelessWidget {
           print(uid);
           print(_currentUser?.username);
           print(_currentUser?.friends);
+          print("Friend requests: ${_currentUser?.friendRequests}");
+          print("Friens: ${_currentUser?.friends}");
 
           if (snapshot.hasData) {
             print("::::DATA FROM USER FROM FIRESTORE: ${snapshot.data}");

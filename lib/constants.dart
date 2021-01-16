@@ -32,7 +32,9 @@ class Constants {
   static Widget displayLoadingSpinner() {
     return Scaffold(
       body: Center(
-        child: CircularProgressIndicator(),
+        child: CircularProgressIndicator(
+          backgroundColor: Colors.transparent,
+        ),
       ),
     );
   }

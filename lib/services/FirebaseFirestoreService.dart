@@ -19,9 +19,18 @@ class FirebaseFirestoreService {
   Future<List<User>> getAllUsersFromList(List<dynamic> userIds) async {
     final query = await instance
         .collection('users')
-        .where(FieldPath.documentId, whereIn: userIds)
+        .where(FieldPath.documentId, whereIn: userIds.isEmpty ? [""] : userIds)
         .get();
+
     return query.docs.map((el) => User.fromMap(el.data(), el.id)).toList();
+    // return query.map((QuerySnapshot querySnapshot) {
+    //   if (querySnapshot.docs == null) {
+    //     return null;
+    //   }
+    //   return querySnapshot.docs.map((QueryDocumentSnapshot documentSnapshot) {
+    //     return User.fromMap(documentSnapshot.data(), documentSnapshot.id);
+    //   }).toList();
+    // });
   }
 
   Future<void> updateUserCreatedParties(
@@ -50,8 +59,8 @@ class FirebaseFirestoreService {
     }
   }
 
-  Future<void> updateUserFriends(List<dynamic> createdPartyIds,
-      String userTobeSent, List<dynamic> value, String sendingUserId) async {
+  Future<void> updateUserFriends(
+      {String userTobeSent, List<dynamic> value}) async {
     try {
       return await instance
           .collection('users')
@@ -119,8 +128,14 @@ class FirebaseFirestoreService {
   }
 
   Future<User> getUserData(String userId) async {
-    final _data = await instance.collection('users').doc(userId).get();
-    return User.fromMap(_data.data(), _data.id);
+    try {
+      final _data = await instance.collection('users').doc(userId).get();
+
+      return User.fromMap(_data.data(), _data.id);
+    } catch (error) {
+      print("NEPOSTOJI OVAKI USER");
+      return null;
+    }
   }
 
   //TODO: provide different querying for different situations, this is an example (mby later even devide by country

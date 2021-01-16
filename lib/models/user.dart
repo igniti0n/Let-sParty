@@ -47,10 +47,10 @@ class User {
     return {
       'username': user.username,
       'imageUrl': user.imageUrl,
-      'attendedPartyIds': user.attendedPartyIds.toList() as List<String>,
-      'createdPartyIds': user.createdPartyIds.toList() as List<String>,
-      'friends': user.friends.toList() as List<String>,
-      'friendRequests': user.friendRequests.toList() as List<String>,
+      'attendedPartyIds': user.attendedPartyIds.toList(),
+      'createdPartyIds': user.createdPartyIds.toList(),
+      'friends': user.friends.toList(),
+      'friendRequests': user.friendRequests.toList(),
     };
   }
 }
