@@ -127,6 +127,22 @@ class FirebaseFirestoreService {
     });
   }
 
+  Future<void> updateUserAttendedParties(
+      String uid, List<dynamic> value) async {
+    await instance
+        .collection('users')
+        .doc(uid)
+        .update({'attendedPartyIds': value});
+  }
+
+  Future<void> updatePartyPeopleComing(
+      String partyId, List<dynamic> value) async {
+    await instance
+        .collection('parties')
+        .doc(partyId)
+        .update({'peopleComing': value});
+  }
+
   Future<User> getUserData(String userId) async {
     try {
       final _data = await instance.collection('users').doc(userId).get();

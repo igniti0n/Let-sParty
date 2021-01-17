@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 
-import 'package:LetsParty/constants.dart';
 import '../models/party.dart';
+import '../models/user.dart';
 import '../widgets/purple_button.dart';
+import '../services/FirebaseFirestoreService.dart';
 
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class PartyDetailScreen extends StatelessWidget {
   static final routeName = '/partyDetailScreen';
@@ -15,10 +17,13 @@ class PartyDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final _media = MediaQuery.of(context);
+    final _theme = Theme.of(context);
     final double _availableHeight =
         _media.size.height - _media.viewInsets.top - _media.viewPadding.top;
-    final Party _party = ModalRoute.of(context).settings.arguments as Party;
-    final _theme = Theme.of(context);
+    final Map<String, dynamic> _arguments =
+        ModalRoute.of(context).settings.arguments as Map<String, Object>;
+    final Party _party = _arguments['party'] as Party;
+    final User _currentUser = _arguments['currentUser'] as User;
 
     return Scaffold(
       backgroundColor: Colors.grey[200],
@@ -148,9 +153,10 @@ class PartyDetailScreen extends StatelessWidget {
                     ],
                   ),
                 ),
-                SizedBox(
-                  height: 100,
-                )
+                if (_currentUser.uid != _party.partyCreatorId)
+                  SizedBox(
+                    height: 100,
+                  )
               ],
             ),
           ),
@@ -166,20 +172,94 @@ class PartyDetailScreen extends StatelessWidget {
               onPressed: () => Navigator.of(context).pop(),
             ),
           ),
-          Positioned(
-            bottom: 26,
-            left: _media.size.width / 4.6,
-            child: PurpleButton(
-              text: 'I am coming!',
-              media: _media,
-              theme: _theme,
-              onTap: () {
-                print('TAP HHEHEH');
-              },
+          if (_currentUser.uid != _party.partyCreatorId)
+            Positioned(
+              bottom: 26,
+              left: _media.size.width / 4.6,
+              child: AttendanceButton(
+                media: _media,
+                theme: _theme,
+                currentUser: _currentUser,
+                party: _party,
+              ),
             ),
-          ),
         ],
       ),
+    );
+  }
+}
+
+class AttendanceButton extends StatefulWidget {
+  AttendanceButton({
+    Key key,
+    @required MediaQueryData media,
+    @required ThemeData theme,
+    @required Party party,
+    @required User currentUser,
+  })  : _media = media,
+        _theme = theme,
+        _party = party,
+        _currentUser = currentUser,
+        super(key: key);
+
+  final MediaQueryData _media;
+  final ThemeData _theme;
+  final Party _party;
+
+  final User _currentUser;
+
+  @override
+  _AttendanceButtonState createState() => _AttendanceButtonState();
+}
+
+class _AttendanceButtonState extends State<AttendanceButton> {
+  bool _isComing;
+
+  @override
+  Widget build(BuildContext context) {
+    _isComing = widget._party.peopleComing.contains(widget._currentUser.uid);
+
+    void _addUserToParty() async {
+      widget._party.peopleComing.add(widget._currentUser.uid);
+      widget._currentUser.attendedPartyIds.add(widget._party.partyId);
+      await Provider.of<FirebaseFirestoreService>(context, listen: false)
+          .updatePartyPeopleComing(
+              widget._party.partyId, widget._party.peopleComing);
+      await Provider.of<FirebaseFirestoreService>(context, listen: false)
+          .updateUserAttendedParties(
+              widget._currentUser.uid, widget._currentUser.attendedPartyIds);
+      setState(() {
+        _isComing = true;
+      });
+    }
+
+    void _removeUserFromParty() async {
+      widget._party.peopleComing.remove(widget._currentUser.uid);
+      widget._currentUser.attendedPartyIds.remove(widget._party.partyId);
+      await Provider.of<FirebaseFirestoreService>(context, listen: false)
+          .updatePartyPeopleComing(
+              widget._party.partyId, widget._party.peopleComing);
+      await Provider.of<FirebaseFirestoreService>(context, listen: false)
+          .updateUserAttendedParties(
+              widget._currentUser.uid, widget._currentUser.attendedPartyIds);
+      setState(() {
+        _isComing = false;
+      });
+    }
+
+    return PurpleButton(
+      text: _isComing ? 'Can\'t make it' : 'I am coming!',
+      isPurple: !_isComing,
+      media: widget._media,
+      theme: widget._theme,
+      useSplashDelay: false,
+      onTap: () {
+        if (_isComing) {
+          _removeUserFromParty();
+        } else {
+          _addUserToParty();
+        }
+      },
     );
   }
 }

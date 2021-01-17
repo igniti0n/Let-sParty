@@ -29,7 +29,7 @@ class Party {
   final Drinks drinks;
   @required
   final Music music;
-  int numberOfPeopleComming;
+  List<dynamic> peopleComing;
   List<dynamic> likes;
   @required
   final DateTime createdAt;
@@ -48,7 +48,7 @@ class Party {
     this.address,
     this.drinks,
     this.imageUrl,
-    this.numberOfPeopleComming,
+    this.peopleComing,
     this.music,
     this.description,
     this.title,
@@ -71,7 +71,7 @@ class Party {
         address: inputMap['address'],
         drinks: Drinks.values.elementAt(inputMap['drinks']),
         music: Music.values.elementAt(inputMap['music']),
-        numberOfPeopleComming: inputMap['numberOfPeopleComming'],
+        peopleComing: inputMap['peopleComing'],
         imageUrl: inputMap['imageUrl'],
         description: inputMap['description'],
         title: inputMap['title'],
@@ -95,7 +95,7 @@ class Party {
             'address': party.address,
             'drinks': party.drinks.index,
             'imageUrl': party.imageUrl,
-            'numberOfPeopleComming': party.numberOfPeopleComming,
+            'peopleComing': party.peopleComing,
             'music': party.music.index,
             'description': party.description,
             'title': party.title,

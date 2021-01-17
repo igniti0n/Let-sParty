@@ -455,6 +455,7 @@ class SendRequestButton extends StatelessWidget {
         ),
         child: Material(
           color: Colors.transparent,
+          borderRadius: BorderRadius.all(Radius.circular(8)),
           child: InkWell(
             onTap: onTap,
             child: Padding(

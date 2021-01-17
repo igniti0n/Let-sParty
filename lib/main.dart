@@ -63,6 +63,7 @@ class MyApp extends StatelessWidget {
               UserDeligator.routeName: (ctx) => UserDeligator(),
               PartyDetailScreen.routeName: (ctx) => PartyDetailScreen(),
             },
+
             // initialRoute: SignupScreen.routeName,
             home: AuthenticationWidget(
               snapshot: userSnapshot,

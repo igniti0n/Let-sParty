@@ -44,7 +44,22 @@ class _UserWallNavigatorState extends State<UserWallNavigator> {
       _friendshipStatus = FriendshipStatus.Pending;
     }
 
-    Future<void> _removeFriend() {
+    Future<void> _removeFriend() async {
+      _friendshipStatus = FriendshipStatus.NotFriends;
+      widget.logedUser.friends.remove(widget.userToBeDisplayed.uid);
+      await Provider.of<FirebaseFirestoreService>(context, listen: false)
+          .updateUserFriends(
+        userTobeSent: widget.logedUser.uid,
+        value: widget.logedUser.friends,
+      );
+
+      widget.userToBeDisplayed.friends.remove(widget.logedUser.uid);
+      await Provider.of<FirebaseFirestoreService>(context, listen: false)
+          .updateUserFriends(
+        userTobeSent: widget.userToBeDisplayed.uid,
+        value: widget.userToBeDisplayed.friends,
+      );
+      setState(() {});
       print("REMOVING FRIEND.....");
     }
 
@@ -158,6 +173,7 @@ class _UserWallNavigatorState extends State<UserWallNavigator> {
                                 await _updateFriendRequests();
                               } else {
                                 await _removeFriend();
+
                                 _friendshipStatus = FriendshipStatus.NotFriends;
                               }
                             },
@@ -290,6 +306,7 @@ class _AddFriendButtonState extends State<AddFriendButton> {
       child: Material(
         color: Colors.transparent,
         child: InkWell(
+          borderRadius: BorderRadius.all(Radius.circular(8)),
           splashFactory: InkSplash.splashFactory,
           splashColor: widget.friendshipStatus != FriendshipStatus.NotFriends
               ? Colors.red[300]

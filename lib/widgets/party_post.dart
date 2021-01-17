@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import '../models/party.dart';
 
 import 'package:intl/intl.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:provider/provider.dart';
 
 class PartyPost extends StatefulWidget {
@@ -105,62 +106,62 @@ class _PartyPostState extends State<PartyPost> {
             ),
           ),
           Expanded(
-            child: Container(
-              height: _detailSize,
-              width: double.infinity,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Flexible(
-                    flex: 1,
+            // child: Container(
+            //   height: _detailSize,
+            //   width: double.infinity,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Expanded(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                        child: AutoSizeText(
+                          widget.party.title,
+                          maxLines: 1,
+                          style:
+                              _theme.textTheme.headline1.copyWith(fontSize: 25),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Flexible(
+                  flex: 1,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 10.0, vertical: 8.0),
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-                          child: Text(
-                            widget.party.title,
-                            style: _theme.textTheme.headline1
-                                .copyWith(fontSize: 25),
-                          ),
+                        Image.asset(
+                          'assets/icons/peopleComing.png',
+                          height: _detailSize * 0.13,
+                        ),
+                        AutoSizeText(
+                          '${widget.party.peopleComing.length} people coming',
+                          style: _theme.textTheme.bodyText1,
+                        ),
+                        Image.asset(
+                          'assets/icons/calendar.png',
+                          height: _detailSize * 0.11,
+                        ),
+                        AutoSizeText(
+                          DateFormat.yMEd().format(widget.party.timeOfTheParty),
+                          style: _theme.textTheme.bodyText1,
                         ),
                       ],
                     ),
                   ),
-                  Flexible(
-                    flex: 1,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 10.0, vertical: 8.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          Image.asset(
-                            'assets/icons/peopleComing.png',
-                            height: _detailSize * 0.13,
-                          ),
-                          Text(
-                            '${widget.party.numberOfPeopleComming} people coming',
-                            style: _theme.textTheme.bodyText1,
-                          ),
-                          Image.asset(
-                            'assets/icons/calendar.png',
-                            height: _detailSize * 0.11,
-                          ),
-                          Text(
-                            DateFormat.yMEd()
-                                .format(widget.party.timeOfTheParty),
-                            style: _theme.textTheme.bodyText1,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Padding(
+                ),
+                Expanded(
+                  child: Padding(
                     padding: const EdgeInsets.fromLTRB(18, 4, 18, 4),
                     child: Container(
                       width: _size.width,
-                      child: Text(
+                      child: AutoSizeText(
                         '"${widget.party.slogan}"',
                         textAlign: TextAlign.center,
                         overflow: TextOverflow.clip,
@@ -169,39 +170,43 @@ class _PartyPostState extends State<PartyPost> {
                       ),
                     ),
                   ),
-                  Flexible(
-                    flex: 1,
-                    child: Column(
-                      children: [
-                        Divider(
-                          thickness: 1,
-                          endIndent: 20,
-                          color: Colors.blueGrey.shade300,
-                          indent: 20,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 2.0),
-                          child: GestureDetector(
-                            onTap: () => Navigator.of(context).pushNamed(
-                                PartyDetailScreen.routeName,
-                                arguments: widget.party),
-                            child: Text(
-                              'View Party Details',
-                              style: _theme.textTheme.bodyText1
-                                  .copyWith(fontSize: 19),
-                            ),
+                ),
+                Flexible(
+                  flex: 1,
+                  child: Column(
+                    children: [
+                      Divider(
+                        thickness: 1,
+                        endIndent: 20,
+                        color: Colors.blueGrey.shade300,
+                        indent: 20,
+                      ),
+                      Expanded(
+                        child: GestureDetector(
+                          onTap: () => Navigator.of(context).pushNamed(
+                              PartyDetailScreen.routeName,
+                              arguments: {
+                                'party': widget.party,
+                                'currentUser': widget.currentUser,
+                              }),
+                          child: AutoSizeText(
+                            'View Party Details',
+                            style: _theme.textTheme.bodyText1
+                                .copyWith(fontSize: 19),
                           ),
                         ),
-                        Divider(
-                          thickness: 1,
-                          endIndent: 20,
-                          color: Colors.blueGrey.shade300,
-                          indent: 20,
-                        ),
-                      ],
-                    ),
+                      ),
+                      Divider(
+                        thickness: 1,
+                        endIndent: 20,
+                        color: Colors.blueGrey.shade300,
+                        indent: 20,
+                      ),
+                    ],
                   ),
-                  Padding(
+                ),
+                Expanded(
+                  child: Padding(
                     padding: const EdgeInsets.symmetric(vertical: 4.0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -231,32 +236,34 @@ class _PartyPostState extends State<PartyPost> {
                             widget.party.likes.contains(widget.currentUser.uid)
                                 ? 'assets/icons/liver-filled.png'
                                 : 'assets/icons/liver-empty.png',
-                            height: _detailSize * 0.13,
+                            // height: _detailSize * 0.13,
                           ),
                         ),
                         Container(
                           width: _size.width * 0.7,
-                          height: _detailSize * 0.13,
-                          child: Text(
+                          //height: _detailSize * 0.13,
+                          child: AutoSizeText(
                             widget.party.likes.contains(widget.currentUser.uid)
                                 ? 'You and ${widget.party.likes.length - 1} people wreckd liver for this party !'
                                 : 'Your liver is safe from this party',
                             textAlign: TextAlign.left,
+                            maxLines: 1,
                             style: _theme.textTheme.bodyText1.copyWith(
                                 fontSize: 16, fontWeight: FontWeight.w500),
                           ),
                         ),
-                        // Text(
+                        // AutoSizeText(
                         //   DateFormat.yMMMd().format(widget.party.createdAt),
                         //   style: _theme.textTheme.bodyText1,
                         // )
                       ],
                     ),
-                  )
-                ],
-              ),
+                  ),
+                )
+              ],
             ),
-          )
+          ),
+          //)
         ],
       ),
     );

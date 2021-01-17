@@ -94,7 +94,7 @@ class _UserWallState extends State<UserWall> {
                 itemBuilder: (ctx, index) {
                   return PartyPost(
                     party: Party.fromMap(_data[index]),
-                    isUserWall: true,
+                    isUserWall: _buildCreated,
                     currentUser: widget.logedInUser,
                   );
                 },

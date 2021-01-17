@@ -1,15 +1,20 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../constants.dart';
 import 'package:clip_shadow/clip_shadow.dart';
 
 class PurpleButton extends StatelessWidget {
-  const PurpleButton({
+  PurpleButton({
     Key key,
     @required MediaQueryData media,
     @required ThemeData theme,
     @required this.onTap,
     @required this.text,
+    this.isPurple = true,
+    this.useSplashDelay = true,
   })  : _media = media,
         _theme = theme,
         super(key: key);
@@ -18,28 +23,45 @@ class PurpleButton extends StatelessWidget {
   final ThemeData _theme;
   final Function onTap;
   final String text;
+  final bool isPurple;
+  final bool useSplashDelay;
+  Timer _t;
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        clipBehavior: Clip.none,
-        alignment: Alignment.center,
-        padding: EdgeInsets.all(12),
-        width: _media.size.width / 1.7,
-        decoration: BoxDecoration(
-          color: onTap == null ? Colors.grey : Constants.kButtonColor,
-          border: Border.all(color: Color.fromRGBO(97, 92, 92, 1), width: 2),
+    return Container(
+      //  clipBehavior: Clip.none,
+      // alignment: Alignment.center,
+      width: _media.size.width / 1.7,
+      decoration: BoxDecoration(
+        color: !isPurple ? Colors.grey : Constants.kButtonColor,
+        border: Border.all(color: Color.fromRGBO(97, 92, 92, 1), width: 2),
+        borderRadius: BorderRadius.circular(15),
+        boxShadow: [
+          BoxShadow(offset: Offset(0, 1), color: Colors.black, blurRadius: 1)
+        ],
+      ),
+      child: Material(
+        color: Colors.transparent,
+        animationDuration: Duration(milliseconds: 500),
+        child: InkWell(
           borderRadius: BorderRadius.circular(15),
-          boxShadow: [
-            BoxShadow(offset: Offset(0, 1), color: Colors.black, blurRadius: 1)
-          ],
-        ),
-        child: Text(
-          text,
-          style: _theme.textTheme.headline1
-              .copyWith(color: Constants.kPurpleButtonTextColor),
+          onTap: () {
+            _t = new Timer(
+                Duration(
+                  milliseconds: useSplashDelay ? 200 : 0,
+                ),
+                () => onTap());
+          },
+          child: Padding(
+            padding: EdgeInsets.all(12),
+            child: Text(
+              text,
+              textAlign: TextAlign.center,
+              style: _theme.textTheme.headline1
+                  .copyWith(color: Constants.kPurpleButtonTextColor),
+            ),
+          ),
         ),
       ),
     );
