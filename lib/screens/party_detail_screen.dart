@@ -7,6 +7,7 @@ import '../services/FirebaseFirestoreService.dart';
 
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 
 class PartyDetailScreen extends StatelessWidget {
   static final routeName = '/partyDetailScreen';
@@ -43,7 +44,7 @@ class PartyDetailScreen extends StatelessWidget {
                 ),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(4, 24, 4, 0),
-                  child: Text(_party.title,
+                  child: AutoSizeText(_party.title,
                       style: _theme.textTheme.headline1.copyWith(fontSize: 25)),
                 ),
                 Divider(
@@ -54,16 +55,15 @@ class PartyDetailScreen extends StatelessWidget {
                 ),
                 Padding(
                   padding:
-                      const EdgeInsets.symmetric(vertical: 8.0, horizontal: 22),
+                      const EdgeInsets.symmetric(vertical: 8.0, horizontal: 20),
                   child: Text(
                     _party.description,
                     style: _theme.textTheme.bodyText1,
-                    textAlign: TextAlign.justify,
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(4, 12, 4, 0),
-                  child: Text('Party Location',
+                  child: AutoSizeText('Party Location',
                       style: _theme.textTheme.headline1.copyWith(
                           fontStyle: FontStyle.italic,
                           fontWeight: FontWeight.w400)),
@@ -83,7 +83,7 @@ class PartyDetailScreen extends StatelessWidget {
                         'assets/icons/location.png',
                         height: 44,
                       ),
-                      Text(_party.address,
+                      AutoSizeText(_party.address,
                           style: _theme.textTheme.bodyText1.copyWith(
                               fontWeight: FontWeight.bold, fontSize: 17)),
                     ],
@@ -91,7 +91,7 @@ class PartyDetailScreen extends StatelessWidget {
                 ),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(4, 22, 4, 0),
-                  child: Text('Party Specifics',
+                  child: AutoSizeText('Party Specifics',
                       style: _theme.textTheme.headline1.copyWith(
                           fontStyle: FontStyle.italic,
                           fontWeight: FontWeight.w400)),
@@ -104,7 +104,7 @@ class PartyDetailScreen extends StatelessWidget {
                 ),
                 Padding(
                   padding:
-                      const EdgeInsets.symmetric(horizontal: 8.0, vertical: 18),
+                      const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
@@ -112,7 +112,7 @@ class PartyDetailScreen extends StatelessWidget {
                         'assets/icons/time.png',
                         height: 34,
                       ),
-                      Text(
+                      AutoSizeText(
                         DateFormat.Hm().format(_party.timeOfTheParty) +
                             '      ',
                         style: _theme.textTheme.bodyText1.copyWith(
@@ -122,7 +122,8 @@ class PartyDetailScreen extends StatelessWidget {
                         'assets/icons/calendar.png',
                         height: 34,
                       ),
-                      Text(DateFormat.yMEd().format(_party.timeOfTheParty),
+                      AutoSizeText(
+                          DateFormat.yMEd().format(_party.timeOfTheParty),
                           style: _theme.textTheme.bodyText1.copyWith(
                               fontWeight: FontWeight.bold, fontSize: 17)),
                     ],
@@ -130,7 +131,7 @@ class PartyDetailScreen extends StatelessWidget {
                 ),
                 Padding(
                   padding:
-                      const EdgeInsets.symmetric(horizontal: 8.0, vertical: 18),
+                      const EdgeInsets.symmetric(horizontal: 8.0, vertical: 14),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
@@ -138,7 +139,7 @@ class PartyDetailScreen extends StatelessWidget {
                         'assets/icons/drinks.png',
                         height: 34,
                       ),
-                      Text(
+                      AutoSizeText(
                         _party.drinks.toString().replaceRange(0, 7, ''),
                         style: _theme.textTheme.bodyText1.copyWith(
                             fontWeight: FontWeight.bold, fontSize: 17),
@@ -147,7 +148,8 @@ class PartyDetailScreen extends StatelessWidget {
                         'assets/icons/music.png',
                         height: 34,
                       ),
-                      Text(_party.music.toString().replaceRange(0, 6, ''),
+                      AutoSizeText(
+                          _party.music.toString().replaceRange(0, 6, ''),
                           style: _theme.textTheme.bodyText1.copyWith(
                               fontWeight: FontWeight.bold, fontSize: 17)),
                     ],

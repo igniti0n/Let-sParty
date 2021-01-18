@@ -5,6 +5,8 @@ import 'package:provider/provider.dart';
 
 import '../models/user.dart';
 
+import 'package:auto_size_text/auto_size_text.dart';
+
 class UserWallNavigator extends StatefulWidget {
   final Size availableSize;
   final Function(bool) onTapChange;
@@ -110,7 +112,7 @@ class _UserWallNavigatorState extends State<UserWallNavigator> {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       Flexible(
-                        flex: 1,
+                        flex: 2,
                         child: Row(
                           children: [
                             Container(
@@ -131,7 +133,7 @@ class _UserWallNavigatorState extends State<UserWallNavigator> {
                         ),
                       ),
                       Flexible(
-                        flex: 1,
+                        flex: 2,
                         child: Row(
                           children: [
                             Container(
@@ -177,7 +179,7 @@ class _UserWallNavigatorState extends State<UserWallNavigator> {
                                 _friendshipStatus = FriendshipStatus.NotFriends;
                               }
                             },
-                            availableHeight: _iconsSize / 1,
+                            // availableHeight: _iconsSize / 1,
                             width: this.widget.availableSize.width / 3,
                             visitingUser: widget.userToBeDisplayed,
                           ),
@@ -274,7 +276,7 @@ class UserNavigationButton extends StatelessWidget {
 }
 
 class AddFriendButton extends StatefulWidget {
-  final availableHeight;
+  // final availableHeight;
   final double width;
   final Function() onTap;
 
@@ -282,7 +284,7 @@ class AddFriendButton extends StatefulWidget {
   final FriendshipStatus friendshipStatus;
   const AddFriendButton({
     Key key,
-    @required this.availableHeight,
+    // @required this.availableHeight,
     @required this.width,
     @required this.onTap,
     @required this.visitingUser,
@@ -297,6 +299,8 @@ class _AddFriendButtonState extends State<AddFriendButton> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      // height: widget.availableHeight,
+      width: widget.width,
       decoration: BoxDecoration(
         color: widget.friendshipStatus == FriendshipStatus.NotFriends
             ? Constants.kButtonColor
@@ -314,41 +318,34 @@ class _AddFriendButtonState extends State<AddFriendButton> {
           onTap: () {
             widget.onTap();
           },
-          child: Container(
-            height: widget.availableHeight,
-            width: widget.width,
-            child: Padding(
-              padding: const EdgeInsets.all(4.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Image.asset(
-                      widget.friendshipStatus == FriendshipStatus.NotFriends
-                          ? 'assets/icons/addUser-filled.png'
-                          : widget.friendshipStatus == FriendshipStatus.Pending
-                              ? 'assets/icons/checkmark.png'
-                              : 'assets/icons/removeUser-filled.png'),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 4.0),
-                    child: Text(
-                      widget.friendshipStatus == FriendshipStatus.NotFriends
-                          ? '    Add Friend'
-                          : widget.friendshipStatus == FriendshipStatus.Pending
-                              ? '    Invite Sent'
-                              : '   You\'r friends',
-                      textAlign: TextAlign.center,
-                      style: Theme.of(context).textTheme.headline1.copyWith(
-                            fontSize: 16,
-                            color: widget.friendshipStatus ==
-                                    FriendshipStatus.NotFriends
-                                ? Colors.white
-                                : Colors.black,
-                          ),
-                    ),
-                  ),
-                ],
-              ),
+          child: Padding(
+            padding: const EdgeInsets.all(4.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Image.asset(
+                    widget.friendshipStatus == FriendshipStatus.NotFriends
+                        ? 'assets/icons/addUser-filled.png'
+                        : widget.friendshipStatus == FriendshipStatus.Pending
+                            ? 'assets/icons/checkmark.png'
+                            : 'assets/icons/removeUser-filled.png'),
+                AutoSizeText(
+                  widget.friendshipStatus == FriendshipStatus.NotFriends
+                      ? '    Add Friend'
+                      : widget.friendshipStatus == FriendshipStatus.Pending
+                          ? '    Invite Sent'
+                          : '   You\'r friends',
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.headline1.copyWith(
+                        fontSize: 16,
+                        color: widget.friendshipStatus ==
+                                FriendshipStatus.NotFriends
+                            ? Colors.white
+                            : Colors.black,
+                      ),
+                ),
+              ],
             ),
           ),
         ),

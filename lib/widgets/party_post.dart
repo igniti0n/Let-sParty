@@ -68,14 +68,13 @@ class _PartyPostState extends State<PartyPost> {
                 children: [
                   Padding(
                     padding:
-                        const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+                        const EdgeInsets.symmetric(vertical: 2, horizontal: 10),
                     child: CircleAvatar(
                       backgroundImage: NetworkImage(
                         widget.party.partyCreatorImageUrl,
                       ),
                     ),
                   ),
-                  //style: Theme.of(context).textTheme.headline2,
                   RichText(
                     text: TextSpan(
                       text: '${widget.party.partyCreatorUsername} ',
@@ -112,41 +111,39 @@ class _PartyPostState extends State<PartyPost> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Expanded(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-                        child: AutoSizeText(
-                          widget.party.title,
-                          maxLines: 1,
-                          style:
-                              _theme.textTheme.headline1.copyWith(fontSize: 25),
-                        ),
-                      ),
-                    ],
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 4, 20, 0),
+                  child: AutoSizeText(
+                    widget.party.title,
+                    maxLines: 1,
+                    style: _theme.textTheme.headline1.copyWith(fontSize: 25),
                   ),
                 ),
                 Flexible(
-                  flex: 1,
+                  flex: 2,
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 10.0, vertical: 8.0),
+                        horizontal: 10.0, vertical: 4.0),
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        Image.asset(
-                          'assets/icons/peopleComing.png',
-                          height: _detailSize * 0.13,
+                        Padding(
+                          padding: const EdgeInsets.all(2.0),
+                          child: Image.asset(
+                            'assets/icons/peopleComing.png',
+                            // height: _detailSize * 0.13,
+                          ),
                         ),
                         AutoSizeText(
                           '${widget.party.peopleComing.length} people coming',
                           style: _theme.textTheme.bodyText1,
                         ),
-                        Image.asset(
-                          'assets/icons/calendar.png',
-                          height: _detailSize * 0.11,
+                        Padding(
+                          padding: const EdgeInsets.all(5.0),
+                          child: Image.asset(
+                            'assets/icons/calendar.png',
+                            // height: _detailSize * 0.11,
+                          ),
                         ),
                         AutoSizeText(
                           DateFormat.yMEd().format(widget.party.timeOfTheParty),
@@ -157,57 +154,55 @@ class _PartyPostState extends State<PartyPost> {
                   ),
                 ),
                 Expanded(
+                  flex: 3,
                   child: Padding(
-                    padding: const EdgeInsets.fromLTRB(18, 4, 18, 4),
-                    child: Container(
-                      width: _size.width,
+                    padding: const EdgeInsets.symmetric(horizontal: 18),
+                    child: Center(
                       child: AutoSizeText(
                         '"${widget.party.slogan}"',
                         textAlign: TextAlign.center,
-                        overflow: TextOverflow.clip,
-                        style: _theme.textTheme.headline1
-                            .copyWith(fontSize: 19, color: Colors.grey[900]),
+                        maxLines: 2,
+                        overflow: TextOverflow.fade,
+                        style: _theme.textTheme.headline1.copyWith(
+                          fontSize: 19,
+                          color: Colors.grey[900],
+                        ),
                       ),
                     ),
                   ),
                 ),
-                Flexible(
-                  flex: 1,
-                  child: Column(
-                    children: [
-                      Divider(
-                        thickness: 1,
-                        endIndent: 20,
-                        color: Colors.blueGrey.shade300,
-                        indent: 20,
-                      ),
-                      Expanded(
-                        child: GestureDetector(
-                          onTap: () => Navigator.of(context).pushNamed(
-                              PartyDetailScreen.routeName,
-                              arguments: {
-                                'party': widget.party,
-                                'currentUser': widget.currentUser,
-                              }),
-                          child: AutoSizeText(
-                            'View Party Details',
-                            style: _theme.textTheme.bodyText1
-                                .copyWith(fontSize: 19),
-                          ),
-                        ),
-                      ),
-                      Divider(
-                        thickness: 1,
-                        endIndent: 20,
-                        color: Colors.blueGrey.shade300,
-                        indent: 20,
-                      ),
-                    ],
+                Container(
+                  margin: EdgeInsets.symmetric(vertical: 2),
+                  height: _detailSize * 0.15,
+                  width: _size.width * 0.9,
+                  decoration: BoxDecoration(
+                      border: Border.symmetric(
+                          horizontal: BorderSide(color: Colors.grey))),
+                  alignment: Alignment.center,
+                  // child: Column(
+                  //   mainAxisAlignment: MainAxisAlignment.center,
+                  //   children: [
+                  //     Expanded(
+                  child: GestureDetector(
+                    onTap: () => Navigator.of(context)
+                        .pushNamed(PartyDetailScreen.routeName, arguments: {
+                      'party': widget.party,
+                      'currentUser': widget.currentUser,
+                    }),
+                    child: AutoSizeText(
+                      'View Party Details',
+                      textAlign: TextAlign.center,
+                      style: _theme.textTheme.bodyText1.copyWith(fontSize: 20),
+                    ),
                   ),
+                  //   ),
+                  // ],
+                  //),
                 ),
                 Expanded(
+                  flex: 2,
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 4.0),
+                    padding: const EdgeInsets.symmetric(vertical: 2.0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
@@ -259,7 +254,10 @@ class _PartyPostState extends State<PartyPost> {
                       ],
                     ),
                   ),
-                )
+                ),
+                SizedBox(
+                  height: 10,
+                ),
               ],
             ),
           ),
@@ -269,5 +267,3 @@ class _PartyPostState extends State<PartyPost> {
     );
   }
 }
-
-class GestureRecognizer {}

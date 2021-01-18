@@ -8,6 +8,7 @@ import '../../constants.dart';
 import '../../models/user.dart';
 
 import 'package:provider/provider.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 
 class UserAddingScreen extends StatefulWidget {
   const UserAddingScreen({Key key}) : super(key: key);
@@ -290,7 +291,9 @@ class RequestTile extends StatelessWidget {
     return Column(
       children: [
         Container(
-          height: mediaData.size.height * 0.05,
+          height: mediaData.size.height < 600
+              ? mediaData.size.height * 0.075
+              : mediaData.size.height * 0.05,
           width: mediaData.size.width * 0.8,
           padding: EdgeInsets.fromLTRB(2, 3, 2, 3),
           child: Row(
@@ -399,7 +402,7 @@ class RequestTileButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       // width: mediaData.size.width * 0.4,
-      padding: EdgeInsets.all(2),
+      // padding: EdgeInsets.all(2),
       decoration: BoxDecoration(
         color: isAdding
             ? Constants.kButtonColor
@@ -442,9 +445,10 @@ class SendRequestButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.all(6.0),
       child: Container(
-        width: mediaData.size.width * 0.4,
+        //width: mediaData.size.width * 0.4,
+        // height: mediaData.size.height * 0.1,
         decoration: BoxDecoration(
           color: Constants.kButtonColor,
           borderRadius: BorderRadius.all(Radius.circular(8)),
@@ -460,7 +464,7 @@ class SendRequestButton extends StatelessWidget {
             onTap: onTap,
             child: Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Text(
+              child: AutoSizeText(
                 'Send Request',
                 textAlign: TextAlign.center,
                 style: theme.textTheme.headline1.copyWith(
