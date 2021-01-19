@@ -465,7 +465,7 @@ class SendRequestButton extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: AutoSizeText(
-                'Send Request',
+                'Send Friend Request',
                 textAlign: TextAlign.center,
                 style: theme.textTheme.headline1.copyWith(
                   color: Constants.kPurpleButtonTextColor,
