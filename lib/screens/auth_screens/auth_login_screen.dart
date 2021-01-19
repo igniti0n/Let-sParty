@@ -87,95 +87,93 @@ class _AuthLoginScreenState extends State<AuthLoginScreen> {
           alignment: Alignment.center,
           children: <Widget>[
             ...Constants.buildBackground(),
-            SingleChildScrollView(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Form(
-                    key: _formKey,
-                    child: Column(
-                      children: [
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Form(
+                  key: _formKey,
+                  child: Column(
+                    children: [
+                      AuthWhiteInputField(
+                        hintText: '  email..',
+                        textInputType: TextInputType.emailAddress,
+                        textInputAction: TextInputAction.next,
+                        onSaved: (email) {
+                          _userEmail = email.trim();
+                        },
+                        onFieldSibmitted: (_) => FocusScope.of(context)
+                            .requestFocus(_passwordFocusNode),
+                        validate: (text) {
+                          if (text == null || !EmailValidator.validate(text))
+                            return 'Invalid email.';
+                          return null;
+                        },
+                      ),
+                      AuthWhiteInputField(
+                        hintText: '  password..',
+                        textInputAction: _isLogin
+                            ? TextInputAction.done
+                            : TextInputAction.next,
+                        onFieldSibmitted: (_) {
+                          if (!_isLogin) {
+                            FocusScope.of(context)
+                                .requestFocus(_confirmationFocusNode);
+                          }
+                        },
+                        controller: _passwordController,
+                        focusNode: _passwordFocusNode,
+                        onSaved: (password) {
+                          _userPassword = password;
+                        },
+                        password: true,
+                        validate: (text) {
+                          if (text.length < 8)
+                            return 'Lenght of minimum 8 characters.';
+                          return null;
+                        },
+                      ),
+                      if (!_isLogin)
                         AuthWhiteInputField(
-                          hintText: '  email..',
-                          textInputType: TextInputType.emailAddress,
-                          textInputAction: TextInputAction.next,
-                          onSaved: (email) {
-                            _userEmail = email.trim();
-                          },
-                          onFieldSibmitted: (_) => FocusScope.of(context)
-                              .requestFocus(_passwordFocusNode),
-                          validate: (text) {
-                            if (text == null || !EmailValidator.validate(text))
-                              return 'Invalid email.';
-                            return null;
-                          },
-                        ),
-                        AuthWhiteInputField(
-                          hintText: '  password..',
-                          textInputAction: _isLogin
-                              ? TextInputAction.done
-                              : TextInputAction.next,
-                          onFieldSibmitted: (_) {
-                            if (!_isLogin) {
-                              FocusScope.of(context)
-                                  .requestFocus(_confirmationFocusNode);
-                            }
-                          },
-                          controller: _passwordController,
-                          focusNode: _passwordFocusNode,
-                          onSaved: (password) {
-                            _userPassword = password;
-                          },
+                          hintText: '  confirm..',
+                          textInputAction: TextInputAction.done,
+                          focusNode: _confirmationFocusNode,
                           password: true,
                           validate: (text) {
-                            if (text.length < 8)
-                              return 'Lenght of minimum 8 characters.';
-                            return null;
+                            return _passwordController.value.text == text
+                                ? null
+                                : 'Password does not match.';
                           },
                         ),
-                        if (!_isLogin)
-                          AuthWhiteInputField(
-                            hintText: '  confirm..',
-                            textInputAction: TextInputAction.done,
-                            focusNode: _confirmationFocusNode,
-                            password: true,
-                            validate: (text) {
-                              return _passwordController.value.text == text
-                                  ? null
-                                  : 'Password does not match.';
-                            },
-                          ),
-                      ],
-                    ),
+                    ],
                   ),
-                  SizedBox(
-                    height: _isLogin ? 40 : 20,
-                  ),
-                  Builder(
-                    builder: (ctx) => AuthButton(
-                      width: 150,
-                      height: 50,
-                      onPressed: () => _validateInputAndContinue(ctx),
-                      text: _isLogin ? 'Let\'s party' : 'Continue',
-                    ),
-                  ),
-                  AuthButton(
+                ),
+                SizedBox(
+                  height: _isLogin ? 40 : 20,
+                ),
+                Builder(
+                  builder: (ctx) => AuthButton(
                     width: 150,
                     height: 50,
-                    onPressed: () {
-                      if (this.mounted)
-                        setState(() {
-                          _isLogin = !_isLogin;
-                        });
-                    },
-                    text: _isLogin ? 'Signup ?' : 'Login ?',
+                    onPressed: () => _validateInputAndContinue(ctx),
+                    text: _isLogin ? 'Let\'s party' : 'Continue',
                   ),
-                  SizedBox(
-                    height: size / 2,
-                  ),
-                ],
-              ),
-            )
+                ),
+                AuthButton(
+                  width: 150,
+                  height: 50,
+                  onPressed: () {
+                    if (this.mounted)
+                      setState(() {
+                        _isLogin = !_isLogin;
+                      });
+                  },
+                  text: _isLogin ? 'Signup ?' : 'Login ?',
+                ),
+                SizedBox(
+                  height: size / 2,
+                ),
+              ],
+            ),
           ],
         ),
       ),

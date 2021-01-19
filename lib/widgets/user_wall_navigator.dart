@@ -155,33 +155,39 @@ class _UserWallNavigatorState extends State<UserWallNavigator> {
                       if (widget.userToBeDisplayed.uid != widget.logedUser.uid)
                         Flexible(
                           flex: 1,
-                          child: AddFriendButton(
-                            friendshipStatus: _friendshipStatus,
-                            onTap: () async {
-                              // userToBeDisplayed.friendRequests.clear();
-                              if (_friendshipStatus !=
-                                  FriendshipStatus.Friends) {
-                                if (_friendshipStatus ==
-                                    FriendshipStatus.Pending) {
-                                  widget.userToBeDisplayed.friendRequests
-                                      .remove(widget.logedUser.uid);
+                          child: Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 8.0),
+                            child: AddFriendButton(
+                              friendshipStatus: _friendshipStatus,
+                              onTap: () async {
+                                // userToBeDisplayed.friendRequests.clear();
+                                if (_friendshipStatus !=
+                                    FriendshipStatus.Friends) {
+                                  if (_friendshipStatus ==
+                                      FriendshipStatus.Pending) {
+                                    widget.userToBeDisplayed.friendRequests
+                                        .remove(widget.logedUser.uid);
+                                    _friendshipStatus =
+                                        FriendshipStatus.NotFriends;
+                                  } else {
+                                    widget.userToBeDisplayed.friendRequests
+                                        .add(widget.logedUser.uid);
+                                    _friendshipStatus =
+                                        FriendshipStatus.Pending;
+                                  }
+                                  await _updateFriendRequests();
+                                } else {
+                                  await _removeFriend();
+
                                   _friendshipStatus =
                                       FriendshipStatus.NotFriends;
-                                } else {
-                                  widget.userToBeDisplayed.friendRequests
-                                      .add(widget.logedUser.uid);
-                                  _friendshipStatus = FriendshipStatus.Pending;
                                 }
-                                await _updateFriendRequests();
-                              } else {
-                                await _removeFriend();
-
-                                _friendshipStatus = FriendshipStatus.NotFriends;
-                              }
-                            },
-                            // availableHeight: _iconsSize / 1,
-                            width: this.widget.availableSize.width / 3,
-                            visitingUser: widget.userToBeDisplayed,
+                              },
+                              // availableHeight: _iconsSize / 1,
+                              //width: this.widget.availableSize.width / 3,
+                              visitingUser: widget.userToBeDisplayed,
+                            ),
                           ),
                         ),
                     ],
@@ -277,7 +283,7 @@ class UserNavigationButton extends StatelessWidget {
 
 class AddFriendButton extends StatefulWidget {
   // final availableHeight;
-  final double width;
+  // final double width;
   final Function() onTap;
 
   final User visitingUser;
@@ -285,7 +291,7 @@ class AddFriendButton extends StatefulWidget {
   const AddFriendButton({
     Key key,
     // @required this.availableHeight,
-    @required this.width,
+    // @required this.width,
     @required this.onTap,
     @required this.visitingUser,
     @required this.friendshipStatus,
@@ -300,7 +306,8 @@ class _AddFriendButtonState extends State<AddFriendButton> {
   Widget build(BuildContext context) {
     return Container(
       // height: widget.availableHeight,
-      width: widget.width,
+      //width: widget.width,
+
       decoration: BoxDecoration(
         color: widget.friendshipStatus == FriendshipStatus.NotFriends
             ? Constants.kButtonColor
